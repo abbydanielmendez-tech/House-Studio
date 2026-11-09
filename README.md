@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # House-Studio · SASS + Gulp
 
 Portafolio de Abby Mendez Alvarez. Hero con video de fondo y animaciones con anime.js, la intro del televisor, las franjas marino y los casos de branding.
@@ -213,3 +214,4 @@ SASS por sí solo no hace más rápida la web: la mejora de descarga viene de la
 - https://gulpjs.com/docs/en/getting-started/creating-tasks/
 - https://sass-lang.com/documentation/js-api/functions/compile/
 - https://sharp.pixelplumbing.com/api-output/#webp
+=======
