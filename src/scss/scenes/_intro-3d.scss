@@ -1,0 +1,101 @@
+// INTRO 3D · el escritorio reacciona al mouse y se puede jugar con él.
+// intro.js publica --px/--py (−.5…+.5) en .intro-stage y --scene-x/--scene-y (grados).
+#studio-intro {
+    .intro-stage { --px: 0; --py: 0; }
+    .intro-rain, .intro-glow, .intro-dim, .intro-dust, .intro-vcr { position: absolute; pointer-events: none; }
+
+    // Lluvia en la ventana: capa propia que se mueve distinto al fondo (parallax).
+    .intro-rain {
+        left: 14.5%; top: 0; width: 59%; height: 63%; overflow: hidden; opacity: .6;
+        translate: calc(var(--px) * -16px) calc(var(--py) * -9px);
+        // Las tres capas de gotas comparten alto de baldosa (120px): al desplazar la capa 120px
+        // el ciclo es continuo, y solo se anima transform (sin repintar).
+        &::before {
+            content: ""; position: absolute; left: 0; right: 0; top: -120px; bottom: 0; will-change: transform;
+            background:
+                radial-gradient(ellipse 1px 24px at 30% 40%, #cfe0ff80, transparent) 0 0 / 41px 120px,
+                radial-gradient(ellipse 1px 30px at 60% 50%, #b6cdff66, transparent) 9px 0 / 59px 120px,
+                radial-gradient(ellipse 1px 16px at 45% 35%, #dfeaff55, transparent) 4px 0 / 29px 120px;
+            animation: intro-rain .9s linear infinite;
+        }
+    }
+    // Resplandor de la tele: respira y toma el color del casete reproducido.
+    .intro-glow {
+        left: 29%; top: 26%; width: 40%; height: 56%; opacity: .16;
+        background: radial-gradient(ellipse at 50% 50%, var(--glow-color, #6d8fe8), transparent 64%);
+        translate: calc(var(--px) * -6px) calc(var(--py) * -4px);
+        animation: intro-breathe 4.6s ease-in-out infinite;
+    }
+    // Modo noche: se apaga la lámpara y solo queda la luz de la tele.
+    .intro-dim {
+        inset: 0; opacity: 0; transition: opacity .7s ease;
+        background: radial-gradient(ellipse 30% 44% at 48.7% 56%, transparent 50%, #03050fbf 100%);
+    }
+    &.lamp-off .intro-dim { opacity: 1; }
+    .intro-lamp {
+        position: absolute; left: 18.4%; top: 40%; width: 9.5%; height: 16%; padding: 0; border: 0;
+        border-radius: 45% 45% 20% 20%; background: transparent; cursor: pointer; transition: box-shadow .3s;
+        &:hover { box-shadow: 0 0 3cqw #ffb36677; }
+        &:focus-visible { outline: 2px solid #fff3dc; outline-offset: 6px; }
+    }
+    // Polvo flotante a distintas profundidades (lo crea intro.js).
+    .intro-dust { inset: 0; }
+    .intro-dust i {
+        position: absolute; left: var(--x); top: var(--y); border-radius: 50%; background: #ffe6bd;
+        width: calc(var(--s) * 1cqw); height: calc(var(--s) * 1cqw); opacity: var(--o);
+        translate: calc(var(--px) * var(--z) * -52px) calc(var(--py) * var(--z) * -34px);
+        animation: intro-dust var(--t) ease-in-out infinite alternate;
+    }
+    // Ranura de la videograbadora: se ilumina mientras arrastrás un casete.
+    .intro-vcr { left: 36.6%; top: 84.6%; width: 14%; height: 4.4%; border-radius: .4cqw; transition: box-shadow .25s, background .25s; }
+    &.is-dragging .intro-vcr { box-shadow: 0 0 0 2px #ffd89acc, 0 0 2.4cqw #ffcb7a88; background: #ffd89a1f; animation: intro-slot 1s ease-in-out infinite; }
+    &.is-dragging .intro-vcr.is-hot { box-shadow: 0 0 0 3px #fff3dc, 0 0 3.4cqw #ffd89a; background: #ffd89a45; }
+    .intro-hint {
+        position: absolute; left: 62%; top: 70%; margin: 0; pointer-events: none;
+        font: bold clamp(8px, .72vw, 13px) "Courier New", monospace; letter-spacing: .14em;
+        color: #f6e9d2; text-shadow: 0 1px 6px #000a; transition: opacity .5s;
+        animation: intro-hint 2.4s ease-in-out infinite;
+    }
+    &.has-played .intro-hint { opacity: 0; }
+
+    // Pantalla: tinte del casete, reflejo que sigue al mouse y efecto de cambio de canal.
+    .intro-screen { --tint: transparent; }
+    .intro-screen::before { content: ""; position: absolute; inset: 0; pointer-events: none; background: var(--tint); opacity: .32; }
+    .intro-screen::after {
+        background:
+            radial-gradient(circle at calc(50% + var(--px, 0) * 70%) calc(40% + var(--py, 0) * 70%), #ffffff26, transparent 52%),
+            repeating-linear-gradient(0deg, #080b2520 0 1px, transparent 1px 3px);
+    }
+    .intro-screen.is-switching { animation: intro-crt .55s cubic-bezier(.2, .8, .2, 1); }
+
+    // Casetes: se agarran, se arrastran y se "meten" en la ranura.
+    .intro-cassette {
+        cursor: grab; touch-action: none; translate: var(--dx, 0px) var(--dy, 0px);
+        transition: transform .42s cubic-bezier(.2, .8, .2, 1), translate .55s cubic-bezier(.3, 1.3, .4, 1), scale .5s ease, opacity .25s;
+    }
+    .intro-cassette.is-dragging {
+        cursor: grabbing; z-index: 40; transition: transform .1s ease-out, translate 0s;
+        transform: translateY(-1.4cqw) translateZ(90px) rotateX(-22deg) rotateY(-14deg) rotateZ(var(--drag-rz, 0deg));
+    }
+    .intro-cassette.is-flying {
+        pointer-events: none; z-index: 40; scale: .58; opacity: 0;
+        transform: translateZ(0) rotateX(-75deg) rotateY(0deg) rotateZ(0deg);
+        transition: translate .5s cubic-bezier(.5, 0, .2, 1), scale .5s ease-in, transform .5s ease-in, opacity .2s .35s;
+    }
+    .intro-cassette.is-playing .tape-front { box-shadow: inset 0 2px 2px #ffffff22, 0 0 1.4cqw var(--tape); }
+}
+@keyframes intro-rain { to { transform: translateY(120px); } }
+@keyframes intro-breathe { 50% { opacity: .26; } }
+@keyframes intro-dust { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(1.2cqw, -2.6cqw, 0); } }
+@keyframes intro-slot { 50% { opacity: .65; } }
+@keyframes intro-hint { 50% { transform: translateY(-3px); } }
+@keyframes intro-crt {
+    0% { filter: brightness(2.4) saturate(0); transform: scale(1.04, .03); }
+    35% { filter: brightness(1.6); transform: scale(1, 1.05); }
+    100% { filter: none; transform: none; }
+}
+@media (max-aspect-ratio: 1/1) { #studio-intro .intro-hint { left: 49%; top: 77%; } }
+@media (prefers-reduced-motion: reduce) {
+    #studio-intro *::before, #studio-intro *::after { animation: none !important; }
+    #studio-intro .intro-dust, #studio-intro .intro-rain { display: none; }
+}

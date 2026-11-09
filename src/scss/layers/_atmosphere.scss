@@ -1,0 +1,109 @@
+@use "../abstracts/tokens";
+
+/* HOUSE-STUDIO · ATMÓSFERA GLOBAL
+   Cargar después de styles.css.
+   1. Paleta  2. Navegación  3. Proyectos  4. Branding  5. Banners y cierre.
+   Las imágenes de cada marca conservan sus colores originales. */
+
+/* 1. Noche, niebla, marfil y ámbar: la misma dirección visual del jardín.
+   Se mantienen los nombres de variables existentes para no romper componentes. */
+// Las variables se generan desde los mapas de abstracts/_tokens.scss.
+:root, :root[data-theme="dark"] { color-scheme: dark; @include tokens.emit(tokens.$night); }
+:root[data-theme="light"] { color-scheme: light; @include tokens.emit(tokens.$day); }
+body { background:var(--cream); color:var(--ink); }
+main { background:radial-gradient(ellipse at 95% 20%,var(--glow),transparent 29%),var(--cream); }
+::selection {background:var(--blue);color:var(--cream)}
+.section {padding-block:clamp(76px,9vw,140px)}
+.eyebrow {color:var(--blue);font-size:10px;letter-spacing:.2em;line-height:1.7}
+h2 {font-weight:600;letter-spacing:-.055em;line-height:1.08}
+h2 em {color:var(--blue)}
+.section-head > p, .project-info > p {color:var(--muted)}
+.tags span {border-color:var(--line);color:var(--muted);background:transparent}
+
+/* 2. Cabecera sobria: continúa el cielo del hero. */
+.nav {height:84px;border-bottom:1px solid var(--line)}
+.wordmark {font-family:Arial,Helvetica,sans-serif;font-size:22px;letter-spacing:-1px;font-weight:700;transform:none;line-height:.95;color:var(--ink)}
+.wordmark span {font-weight:400;letter-spacing:.3px;font-size:14px;margin-top:5px}
+.nav-contact {border-color:var(--line);background:var(--paper);color:var(--ink)}
+.nav-contact:hover {border-color:var(--blue)}
+/* La franja nace del negro del césped y desemboca suavemente en los proyectos. */
+html .service-strip, html[data-theme="dark"] .service-strip {
+    background:linear-gradient(#060a0b,var(--cream));color:var(--muted);
+    border-top:0;border-bottom:1px solid var(--line);padding-block:28px;
+    font-size:clamp(14px,1.5vw,22px);font-weight:400;letter-spacing:.12em;
+}
+.service-strip b {color:var(--blue);font-size:.85em}
+html[data-theme="light"] .service-strip {background:linear-gradient(#060a0b,#171e21);color:#ded4c3}
+
+/* 3. Proyectos: superficies discretas; el trabajo es el protagonista. */
+.project-grid {gap:48px 30px}
+.project {min-width:0}
+.project:first-child {background:var(--paper);border:1px solid var(--line);box-shadow:var(--shadow)}
+.project:first-child .project-info {padding:clamp(24px,4vw,52px)}
+.project-cover {background:var(--paper);border:1px solid var(--line);box-shadow:var(--shadow)}
+html .cover-art,html[data-theme="dark"] .cover-art {
+    color:var(--ink);background:radial-gradient(ellipse at 90% 20%,var(--glow),transparent 65%),var(--surface);
+}
+html .cover-festival,html[data-theme="dark"] .cover-festival {background:linear-gradient(135deg,#202b34,#32352e);color:#eee5d8}
+.cover-festival:after {color:#ba8d57;opacity:.3}
+.cover-art strong {font-weight:600;letter-spacing:-.055em}
+.project-info h3 {font-weight:600;letter-spacing:-.03em}
+.project-meta {color:var(--blue)}
+.project-actions {border-color:var(--line)}
+.filters button {border-color:var(--line);color:var(--muted);transition:background .2s,color .2s,border-color .2s}
+.filters button.active,.filters button[aria-pressed="true"],.filters button:hover {background:var(--blue);color:var(--cream);border-color:var(--blue)}
+.text-link {color:var(--blue)}
+
+/* 4. Los casos de marca comparten marco; el arte conserva su identidad. */
+.brand-case {border:1px solid var(--line);border-radius:var(--radius);background:var(--paper);margin-bottom:64px}
+.brand-case h3 {font-weight:600}
+.brand-case p {color:var(--muted)}
+.brand-case-footer {background:var(--paper);border-top:1px solid var(--line);color:var(--muted)}
+.brand-case-footer a {color:var(--blue)}
+.brand-jump a {color:var(--muted);background:transparent}
+.brand-jump a:hover {background:var(--surface);color:var(--blue);border-color:var(--blue)}
+.house-gallery-heading {padding-top:55px;border-top:1px solid var(--line)}
+.house-gallery-heading h3 {font-weight:500}
+
+/* 5. Grandes pausas visuales con la luz del horizonte, sin bloques saturados. */
+html .film,html[data-theme="dark"] .film:not(.film-second),html .film-second,html[data-theme="dark"] .film-second {
+    background:radial-gradient(ellipse at 80% 60%,var(--glow),transparent 60%),linear-gradient(150deg,var(--deep),var(--paper));
+    color:var(--ink);border-block:1px solid var(--line);
+}
+.film h2 {font-weight:500}
+.film p:last-child {color:var(--muted)}
+.film-art,.film-second .film-art {transform:none;border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+.about {background:linear-gradient(var(--cream),var(--paper));border-block:1px solid var(--line)}
+.about-art {transform:none}
+.about-art img {border:1px solid var(--line);box-shadow:var(--shadow)}
+.about-art span {font-weight:500;font-size:22px;letter-spacing:-.5px;color:var(--muted)}
+.about p:not(.eyebrow):not(.hand-note) {color:var(--muted);font-size:15px;line-height:1.85}
+.contact {position:relative;background:radial-gradient(ellipse at 90% 50%,var(--glow),transparent 65%)}
+.contact h2 {color:var(--ink)}
+.circle-link {background:transparent;border:1px solid var(--blue);color:var(--blue);transition:background .3s,color .3s}
+.circle-link:hover {background:var(--blue);color:var(--cream)}
+.contact-bottom {border-color:var(--line);color:var(--muted)}
+.footer {border-color:var(--line);color:var(--muted);padding-bottom:100px}
+.footer-meta a:hover {color:var(--blue)}
+.theme-toggle {background:var(--paper);color:var(--ink);border-color:var(--line);box-shadow:var(--shadow)}
+#detail-dialog {background:var(--paper);color:var(--ink);border:1px solid var(--line);box-shadow:var(--shadow)}
+.dialog-close {background:var(--surface);color:var(--ink);border:1px solid var(--line)}
+html .skip {background:var(--blue);color:var(--cream)}
+@media(max-width:700px) {
+    .nav {height:76px}
+    .project:first-child .project-info {padding:24px}
+    .brand-case {border-radius:10px}.project-grid{gap:38px}
+    .film-layout {gap:36px}.about-grid{gap:40px}
+    .theme-toggle {bottom:16px;right:16px}
+    .footer {padding-bottom:100px}
+}
+
+/* 6. Franjas azul marino: el mismo cielo nocturno, en ambos modos de color. */
+html .service-strip,
+html[data-theme="dark"] .service-strip,
+html[data-theme="light"] .service-strip {
+    background:#0d1428;
+    color:#e5dfd5;
+    border-color:#2b354a;
+}
+html .service-strip b {color:#d6ae79}

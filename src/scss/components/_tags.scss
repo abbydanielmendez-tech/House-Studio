@@ -1,0 +1,14 @@
+// Etiquetas de tecnologías y habilidades.
+/* ETIQUETAS: tecnologías del proyecto y habilidades del autor. */
+.tags {
+    display: flex;
+    gap: 7px;
+    flex-wrap: wrap;
+    margin-block: 17px;
+}
+.tags span {
+    font-size: 10px;
+    padding: 6px 9px;
+    border: 1px solid #19191930;
+    border-radius: 5px;
+}

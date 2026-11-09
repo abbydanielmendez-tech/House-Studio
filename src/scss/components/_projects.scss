@@ -1,0 +1,143 @@
+// Grid de proyectos, portadas y fichas.
+/* PROYECTOS: dos columnas en escritorio y una en móvil. */
+.project-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px 30px;
+}
+/* PROYECTO DESTACADO: la primera tarjeta ocupa todo el ancho. */
+.project:first-child {
+    grid-column: 1/-1;
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    align-items: center;
+    background: #e8eddc;
+    border-radius: var(--radius);
+    overflow: hidden;
+}
+.project:first-child 
+/* Ficha breve debajo de cada portada. */
+.project-info {
+    padding: 40px;
+}
+.project:first-child 
+/* PORTADA: botón que abre la historia; admite captura real o diseño editorial. */
+.project-cover {
+    border-radius: 0;
+    aspect-ratio: 1.4;
+}
+.project:first-child h3 {
+    font-size: 34px;
+}
+.project-cover {
+    border: 0;
+    padding: 0;
+    display: block;
+    text-align: left;
+    width: 100%;
+    aspect-ratio: 1.55;
+    border-radius: var(--radius);
+    overflow: hidden;
+    position: relative;
+    background: var(--cover-color);
+}
+.project-cover > img {
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s;
+}
+.project-cover:hover > img {
+    transform: scale(1.025);
+}
+/* PORTADA EDITORIAL: respaldo cuando el campo image del proyecto está vacío. */
+.cover-art {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 9%;
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+}
+/* Adorno tipográfico de fondo, sin significado ni interacción propia. */
+.cover-art:after {
+    content: "✳";
+    position: absolute;
+    right: 2%;
+    bottom: -20%;
+    font-size: 300px;
+    color: currentColor;
+    opacity: 0.1;
+    z-index: -1;
+    transition: transform 1s;
+}
+.project-cover:hover .cover-art:after {
+    transform: rotate(45deg);
+}
+.cover-art strong {
+    font-size: clamp(35px, 4vw, 65px);
+    line-height: 0.94;
+    letter-spacing: -0.07em;
+    white-space: pre-line;
+}
+.cover-art small {
+    font-size: 9px;
+    letter-spacing: 0.17em;
+    position: absolute;
+    top: 20px;
+    left: 24px;
+}
+.cover-art .cover-credit {
+    top: auto;
+    bottom: 20px;
+    font-size: 8px;
+    opacity: 0.7;
+}
+/* VARIANTES: colores de las portadas según el campo cover de data.js. */
+.cover-festival {
+    background: var(--blue);
+    color: var(--cream);
+}
+.cover-festival:after {
+    opacity: 1;
+    color: var(--orange);
+    right: -5%;
+    bottom: -40%;
+    font-size: 350px;
+}
+.cover-store {
+    color: #4e306f;
+}
+.cover-cafe {
+    font-family: Georgia, serif;
+    color: #543c2b;
+}
+.cover-nebulatte {
+    color: #263b73;
+}
+.cover-pizza {
+    color: #8a2e18;
+}
+.project-info {
+    padding-top: 23px;
+}
+.project-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    margin-bottom: 13px;
+}
+.project-info h3 {
+    font-size: 25px;
+    letter-spacing: -0.04em;
+    margin-bottom: 10px;
+}
+.project-info p {
+    font-size: 14px;
+    color: var(--muted);
+    max-width: 420px;
+}

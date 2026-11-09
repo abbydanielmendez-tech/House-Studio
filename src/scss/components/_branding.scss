@@ -1,0 +1,128 @@
+/* ==========================================================
+   08. CASOS DE BRANDING · PROYECTOS DENTRO DE HOUSE STUDIO
+   Cada marca es un componente de pestañas verticales: ver _vertical-tabs.scss (estilos y movimiento)
+   y js/vertical-tabs.js (estado). Aquí quedan el marco de cada caso, los enlaces de marcas, la paleta,
+   el pie, el crédito y la cabecera de la galería de House Studio.
+   Los colores de cada marca viven en sus imágenes; no se modifican :root ni el hero.
+   ========================================================== */
+.brand-jump {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin: 0 0 36px;
+}
+.brand-jump a {
+    font-size: 12px;
+    padding: 12px 16px;
+    border: 1px solid var(--line);
+    border-radius: 30px;
+}
+.brand-jump a:hover {
+    background: var(--ink);
+    color: var(--cream);
+}
+.brand-case {
+    margin: 0 0 65px;
+    border-radius: 0;
+    overflow: hidden;
+    overflow: clip; /* recorta las esquinas igual, pero NO crea un contenedor de scroll: con hidden, la galería sticky no se pegaría */
+    isolation: isolate;
+    scroll-margin-top: 25px;
+}
+
+/* Paleta del proyecto (círculos de color bajo la galería). */
+.brand-palette {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-top: 30px;
+}
+.brand-palette span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 10px;
+}
+.brand-palette i {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 1px solid #19191918;
+}
+.brand-palette-label {
+    font-size: 10px !important;
+    margin: 24px 0 0;
+    color: var(--muted);
+}
+
+/* Autoría: el visitante entiende que está viendo trabajos de Abby. */
+.brand-case .project-credit {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 22px;
+    padding: 8px 12px;
+    border: 1px solid var(--line);
+    border-radius: 30px;
+    color: var(--ink);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+}
+.brand-case .project-credit::before {
+    content: "✳";
+    color: var(--muted);
+    font-size: 16px;
+}
+
+.brand-case-footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 24px 6%;
+    font-size: 11px;
+    line-height: 1.6;
+}
+.brand-case-footer a {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+
+.house-gallery-heading {
+    padding-top: 25px;
+    margin-bottom: 30px;
+}
+.house-gallery-heading h3 {
+    font-size: 35px;
+    letter-spacing: -0.04em;
+    margin: 0 0 15px;
+}
+.house-gallery-heading p:last-child {
+    font-size: 14px;
+    color: var(--muted);
+}
+
+/* Los visores también conservan la identidad visual de House Studio. */
+dialog[data-brand-theme="carmencita"],
+dialog[data-brand-theme="moonflower"] {
+    background: var(--cream);
+    color: var(--ink);
+}
+
+@media (max-width: 600px) {
+    .brand-case {
+        border-radius: 18px;
+        margin-bottom: 40px;
+    }
+    .brand-case-footer {
+        flex-direction: column;
+        gap: 8px;
+    }
+    .brand-jump a {
+        font-size: 11px;
+        padding: 10px 12px;
+    }
+    .house-gallery-heading h3 {
+        font-size: 28px;
+    }
+}

@@ -1,0 +1,93 @@
+// HERO · video de fondo con sombras e interfaz (cifras, botón, tarjeta de proyectos).
+// De atrás hacia delante: 1 video · 2 sombras · 3 capa oscura que crece al hacer scroll
+// · 4 degradado a negro (se funde con el vistazo) · 5 interfaz. js/hero.js mueve el video y la
+// interfaz con transform/opacity al hacer scroll y orquesta la entrada con anime.js.
+
+.hero.hero-poster {
+    position: relative; isolation: isolate; overflow: hidden; padding: 0; color: #fff; background: #060a0b;
+    height: 100svh; min-height: 640px; max-height: 1280px;
+}
+
+/* 1. Video (ida y vuelta, sin audio). El póster se ve mientras carga o si el video no corre. */
+.hero-bg { position: absolute; inset: -3%; z-index: 1; will-change: transform; }
+.hero-video {
+    position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 42%;
+    background: #060a0b; will-change: transform, opacity;
+}
+
+/* 2. Sombras: cabecera legible arriba, columna de texto a la izquierda, viñeta y base oscura */
+.hero-shade {
+    position: absolute; inset: 0; z-index: 2; pointer-events: none;
+    background:
+        linear-gradient(180deg, rgba(4, 6, 8, .82) 0%, rgba(4, 6, 8, .4) 15%, transparent 34%),
+        linear-gradient(90deg, rgba(4, 6, 8, .72) 0%, rgba(4, 6, 8, .34) 36%, transparent 64%),
+        radial-gradient(ellipse 85% 75% at 62% 42%, transparent 36%, rgba(4, 6, 8, .64) 100%);
+}
+/* 3. Al bajar, el video se oscurece hasta el negro de la sección siguiente (hero.js: opacidad) */
+.hero-dim { position: absolute; inset: 0; z-index: 3; pointer-events: none; opacity: 0; background: #060a0b; }
+/* 4. Base: se funde con el vistazo, que empieza en el mismo negro (#060a0b) */
+.hero-fade { position: absolute; inset: auto 0 0; z-index: 4; height: 46%; pointer-events: none; background: linear-gradient(transparent, rgba(6, 10, 11, .55) 40%, rgba(6, 10, 11, .92) 78%, #060a0b); }
+
+/* 5. Interfaz */
+.hero-ui {
+    position: absolute; left: 0; right: 0; bottom: 0; z-index: 8; margin-inline: auto; width: min(1320px, 90%);
+    padding-bottom: clamp(22px, 5.5vh, 60px); display: flex; align-items: flex-end; justify-content: space-between; gap: 28px;
+}
+.hero-main { min-width: 0; }
+.hero-stats {
+    display: flex; gap: clamp(22px, 4.2vw, 64px); margin: 0 0 clamp(18px, 3vh, 30px); padding: 0; list-style: none; text-shadow: 0 2px 22px rgba(0, 0, 0, .6);
+    strong { display: block; font-size: clamp(28px, 3.3vw, 50px); font-weight: 600; letter-spacing: -.03em; line-height: 1; font-variant-numeric: tabular-nums; }
+    span { display: block; margin-top: 10px; font-size: clamp(12px, 1vw, 15px); color: rgba(255, 255, 255, .82); }
+}
+.hero-cta-row { display: flex; align-items: center; gap: 10px; }
+.hero-cta, .hero-cta-arrow {
+    display: inline-flex; align-items: center; justify-content: center; background: #fff; color: #0c1014;
+    box-shadow: 0 16px 34px -18px rgba(0, 0, 0, .85);
+    transition: background .3s, transform .35s cubic-bezier(.2, .8, .2, 1), box-shadow .3s;
+}
+.hero-cta { padding: 16px 28px; border-radius: 999px; font-size: 14px; font-weight: 600; white-space: nowrap; }
+.hero-cta-arrow { width: 52px; height: 52px; border-radius: 50%; font-size: 20px; flex: none; }
+.hero-cta:hover, .hero-cta-arrow:hover { background: #e0b37b; transform: translateY(-3px); box-shadow: 0 18px 34px -14px #e0b37b; }
+.hero-cta-arrow .icon-arrow { width: 20px; height: 20px; transition: transform .35s cubic-bezier(.2, .8, .2, 1); }
+.hero-cta-arrow:hover .icon-arrow { transform: rotate(45deg); }
+.hero-desc { margin: 0 0 0 18px; max-width: 360px; font-size: clamp(12px, 1.05vw, 15px); line-height: 1.45; color: rgba(255, 255, 255, .88); text-shadow: 0 2px 18px rgba(0, 0, 0, .6); }
+
+// Tarjeta pequeña: el proyecto en pantalla, su categoría, contador y barra de progreso.
+.hero-card {
+    flex: none; width: clamp(190px, 17vw, 252px); padding: 8px; border-radius: 22px; text-align: left; color: #fff;
+    background: rgba(12, 16, 18, .55); border: 1px solid rgba(255, 255, 255, .14);
+    box-shadow: 0 30px 60px -24px rgba(0, 0, 0, .85), inset 0 1px 0 rgba(255, 255, 255, .12);
+    &:focus-visible { outline: 2px solid #e0b37b; outline-offset: 5px; }
+}
+.hero-card__inner { display: block; transition: transform .4s cubic-bezier(.2, .8, .2, 1); will-change: transform; }
+.hero-card__thumb { display: block; aspect-ratio: 16 / 10; overflow: hidden; border-radius: 14px; background: #0b0f12; img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 0; transition: transform .6s cubic-bezier(.2, .8, .2, 1); } }
+.hero-card:hover .hero-card__thumb img { transform: scale(1.08); }
+.hero-card__title { display: block; padding: 10px 6px 0; strong, small { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } strong { font-size: 13px; font-weight: 600; } small { margin-top: 2px; font-size: 11px; color: rgba(255, 255, 255, .65); } }
+.hero-card__meta { display: flex; align-items: center; gap: 12px; padding: 10px 6px 4px; }
+.hero-card__count { font-size: 12px; letter-spacing: .06em; font-variant-numeric: tabular-nums; color: rgba(255, 255, 255, .85); }
+.hero-card__bar { flex: 1; height: 3px; border-radius: 3px; background: rgba(255, 255, 255, .22); overflow: hidden; i { display: block; width: 100%; height: 100%; background: #fff; transform-origin: 0 50%; transform: scaleX(0); } }
+
+/* Entrada: hero.js añade html.hero-prep mientras prepara la animación (sin JS todo se ve). */
+html.hero-prep { header.nav, .hero-video, .hero-stats li, .hero-cta, .hero-cta-arrow, .hero-desc, .hero-card { opacity: 0; } }
+
+@media (max-width: 900px) {
+    .hero-ui { flex-direction: column; align-items: stretch; gap: 18px; }
+    .hero-card { width: 100%; max-width: 440px; }
+    .hero-card__inner { display: grid; grid-template-columns: 112px 1fr; grid-template-areas: "thumb title" "thumb meta"; column-gap: 14px; align-items: center; }
+    .hero-card__thumb { grid-area: thumb; }
+    .hero-card__title { grid-area: title; padding: 0 6px 0 0; }
+    .hero-card__meta { grid-area: meta; padding: 6px 6px 0 0; }
+}
+@media (max-width: 700px) {
+    .hero-desc { display: none; }
+    .hero-shade { background:
+        linear-gradient(180deg, rgba(4, 6, 8, .82) 0%, rgba(4, 6, 8, .4) 20%, transparent 40%),
+        linear-gradient(0deg, rgba(4, 6, 8, .7) 0%, transparent 55%),
+        radial-gradient(ellipse 90% 75% at 55% 40%, transparent 36%, rgba(4, 6, 8, .6) 100%); }
+    .hero-stats { gap: 22px; strong { font-size: 27px; } span { font-size: 12px; margin-top: 7px; } }
+    .hero-cta { padding: 14px 22px; }
+    .hero-cta-arrow { width: 46px; height: 46px; }
+}
+@media (prefers-reduced-motion: reduce) {
+    html:not([data-motion="on"]) .hero *, html:not([data-motion="on"]) .hero-card__inner { animation: none !important; transition: none !important; }
+}

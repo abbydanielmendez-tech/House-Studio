@@ -1,0 +1,43 @@
+// Sobre mí.
+/* SOBRE MÍ: fondo secundario para separar la presentación personal. */
+.about {
+    background: #eee4d1;
+}
+/* Distribución de retrato de mascota y biografía. */
+.about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.15fr;
+    gap: 100px;
+    align-items: center;
+}
+.about-art {
+    padding: 30px;
+    transform: rotate(-5deg);
+}
+.about-art img {
+    border-radius: 50%;
+    border: 12px solid var(--cream);
+    box-shadow: 10px 14px 0 #191919;
+}
+.about-art span {
+    display: block;
+    font-size: 28px;
+    font-weight: 900;
+    line-height: 1.05;
+    letter-spacing: -1px;
+    margin: 30px 0 0 30px;
+}
+.about h2 {
+    margin-bottom: 30px;
+}
+.about p:not(.eyebrow):not(.hand-note) {
+    font-size: 14px;
+    color: #544e44;
+}
+/* Frase final con estilo manuscrito. */
+.hand-note {
+    font-family: Georgia, serif;
+    font-style: italic;
+    color: var(--blue);
+    margin-top: 25px;
+}

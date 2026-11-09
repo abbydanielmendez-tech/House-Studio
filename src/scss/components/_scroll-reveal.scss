@@ -1,0 +1,10 @@
+// Aparición al hacer scroll.
+/* IntersectionObserver activa cada bloque solo al entrar en la pantalla. */
+.reveal { animation: none; }
+.scroll-reveal { transition: opacity .75s ease, translate .75s cubic-bezier(.2,.7,.2,1); }
+.scroll-reveal:not(.is-visible) { opacity: 0; translate: 0 24px; }
+.scroll-reveal.is-visible { opacity: 1; translate: 0 0; }
+/* Si recibe foco con Tab, el contenido se muestra inmediatamente. */
+.scroll-reveal:focus-within { opacity: 1; translate: 0 0; }
+.motion-paused .scroll-reveal { opacity: 1; translate: 0 0; }
+.motion-paused .marquee-track { transform: none; }

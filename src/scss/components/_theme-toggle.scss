@@ -1,0 +1,18 @@
+// Botón de cambio de tema.
+.theme-toggle {
+    position: fixed; right: 22px; bottom: 22px; z-index: 30;
+    display: inline-flex; align-items: center; justify-content: center; gap: 0;
+    min-height: 46px; min-width: 46px; padding: 12px 13px; border: 1px solid var(--line);
+    border-radius: 40px; background: var(--cream); color: var(--ink);
+    box-shadow: 0 5px 24px #0003; cursor: pointer; font: 600 12px Arial,sans-serif;
+}
+.theme-toggle svg { width: 19px; height: 19px; fill: none; stroke: currentColor; stroke-width: 1.7; }
+// Compacto: solo el ícono, para no tapar botones ni textos mientras se desplaza la página. El nombre del modo se abre
+// al pasar el cursor o al enfocar con teclado; el aria-label (script.js) ya describe la acción a lectores de pantalla.
+.theme-toggle span {
+    max-width: 0; margin-left: 0; opacity: 0; overflow: hidden; white-space: nowrap;
+    transition: max-width .4s cubic-bezier(.2, .7, .2, 1), margin .4s cubic-bezier(.2, .7, .2, 1), opacity .25s ease;
+}
+.theme-toggle:focus-visible span { max-width: 120px; margin-left: 9px; opacity: 1; }
+@media (hover: hover) { .theme-toggle:hover span { max-width: 120px; margin-left: 9px; opacity: 1; } }
+.theme-toggle:focus-visible { outline: 3px solid var(--blue); outline-offset: 4px; }

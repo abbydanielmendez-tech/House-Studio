@@ -1,0 +1,147 @@
+/* HOUSE-STUDIO · ENTRADA CRT
+   El fondo usa el tramo inicial del video. Las coordenadas del televisor
+   corresponden al recorte 1920 × 940; no cambiar solo una de estas medidas. */
+#studio-intro {
+    position: fixed; inset: 0; margin: 0; padding: 0; border: 0;
+    width: 100vw; height: 100dvh; max-width: none; max-height: none;
+    overflow: hidden; background: #15100d; color: #fff3dc;
+    font-family: 'Courier New', monospace; z-index: 10000;
+}
+#studio-intro::backdrop { background: #15100d; }
+#studio-intro:not([open]) { display: none; }
+#studio-intro .intro-stage {
+    position: absolute; left: 50%; top: 50%;
+    width: max(100vw, 204.25532dvh); aspect-ratio: 1920 / 940;
+    transform: translate(-50%, -50%); transform-origin: 48.7% 57.8%;
+    transition: transform 1.1s cubic-bezier(.65,0,.2,1), filter 1.1s;
+}
+#studio-intro .intro-room { display: block; width: 100%; height: 100%; object-fit: fill; }
+/* Pantalla HTML real: texto, porcentaje y botón accesibles, sobre el CRT. */
+#studio-intro .intro-screen {
+    position: absolute; left: 40.35%; top: 44.9%; width: 16.55%; height: 25.55%;
+    box-sizing: border-box; padding: 1.1%; overflow: hidden;
+    border-radius: 4% / 5%; color: #efecd4;
+    background: radial-gradient(ellipse at 48% 45%, #476ec6, #3354aa 75%, #243c87);
+    box-shadow: inset 0 0 18px #0e1e5599, 0 0 8px #718bdd44;
+    display: flex; flex-direction: column; justify-content: space-between;
+    container-type: inline-size; text-shadow: 0 0 3px #eaf0ff88;
+}
+#studio-intro .intro-screen::after {
+    content: ''; position: absolute; inset: 0; pointer-events: none;
+    background: repeating-linear-gradient(0deg, #080b2520 0 1px, transparent 1px 3px);
+    opacity: .6;
+}
+#studio-intro .intro-channel { display: flex; justify-content: space-between; font-size: 5cqw; }
+#studio-intro .intro-title { font-size: 13cqw; line-height: .96; margin: 0; font-weight: 900; letter-spacing: -.05em; }
+#studio-intro .intro-tagline { margin: 6px 0; font-size: 4.4cqw; }
+#studio-intro .intro-progress-row { display: flex; align-items: center; gap: 6%; }
+#studio-intro .intro-progress {
+    height: 3.5cqw; flex: 1; background: #172f6a55;
+    border: 1px solid #dce6ff55; padding: 1px;
+}
+#studio-intro .intro-progress-fill {
+    width: 0; height: 100%; background: repeating-linear-gradient(90deg,#eeeedd 0 4px,transparent 4px 6px);
+    transition: width .2s linear;
+}
+#studio-intro .intro-percent { font-size: 5cqw; min-width: 4ch; }
+#studio-intro .intro-enter {
+    color: inherit; background: transparent; border: 1px solid #e9ebd780;
+    min-height: 30px; padding: 4px; font: bold 5.6cqw 'Courier New', monospace;
+    cursor: pointer; position: relative; z-index: 1; width: 100%;
+}
+#studio-intro .intro-enter:disabled { opacity: .65; cursor: wait; }
+#studio-intro .intro-enter:focus-visible, #studio-intro .intro-skip:focus-visible { outline: 2px solid #fff; outline-offset: 4px; }
+#studio-intro .intro-enter:not(:disabled):hover { background: #f5edda; color: #28458d; text-shadow: none; }
+/* Etiqueta sobre la marca de la carcasa, sin cambiar el resto de la escena. */
+#studio-intro .intro-tv-label {
+    position: absolute; left: 39.5%; top: 42%; padding: 2px 7px;
+    font-size: clamp(7px,.65vw,12px); background: #423931; color: #a99f8d;
+}
+#studio-intro .intro-top, #studio-intro .intro-bottom {
+    position: absolute; left: 0; right: 0; padding: 22px 26px;
+    display: flex; justify-content: space-between; align-items: center; gap: 16px;
+    font-size: 11px; letter-spacing: .08em; z-index: 2;
+}
+#studio-intro .intro-top { top: 0; background: linear-gradient(#16100c80,transparent); }
+#studio-intro .intro-top strong { font: 900 14px Arial,sans-serif; }
+#studio-intro .intro-bottom { bottom: 0; background: linear-gradient(transparent,#16100c99); }
+#studio-intro .intro-skip { padding: 12px 15px; border: 1px solid #f7eadb66; border-radius: 3px; color: #fff3dc; background: #20180e80; font: inherit; cursor: pointer; }
+#studio-intro .intro-status { margin: 0; max-width: 55%; }
+#studio-intro.is-entering .intro-stage { transform: translate(-50%,-50%) scale(6.5); filter: brightness(1.3); }
+#studio-intro.is-entering .intro-top, #studio-intro.is-entering .intro-bottom { opacity: 0; transition: opacity .2s; }
+#studio-intro.is-entering { animation: intro-out 1.15s ease both; pointer-events: none; }
+@keyframes intro-out { 0%,70% { opacity: 1; } 100% { opacity: 0; } }
+@media (max-width: 600px) {
+    #studio-intro .intro-top, #studio-intro .intro-bottom { padding: 18px; font-size: 10px; }
+    #studio-intro .intro-top > span { display: none; }
+    #studio-intro .intro-enter { min-height: 44px; }
+}
+@media (prefers-reduced-motion: reduce) {
+    #studio-intro *, #studio-intro.is-entering { animation: none !important; transition: none !important; }
+}
+
+/* 02. ESCENA HD + OBJETOS TRIDIMENSIONALES
+   Seis caras por casete. cqw escala toda la geometría con el ancho del escenario. */
+#studio-intro { perspective: 1800px; }
+#studio-intro .intro-stage {
+    aspect-ratio: 1792 / 878;
+    width: max(100vw, 204.10023dvh);
+    container-type: inline-size;
+    transform: translate(-50%,-50%) rotateX(var(--scene-x,0deg)) rotateY(var(--scene-y,0deg)) scale(1.05);
+    transition: transform .35s ease-out, filter 1.1s;
+}
+#studio-intro .intro-screen { left:40.4%; top:44.7%; width:16.3%; height:25.5%; }
+#studio-intro .intro-room { aspect-ratio: 1792 / 878; }
+#studio-intro .intro-progress-fill { transition: width .05s linear; box-shadow: 0 0 6px #e8efff80; }
+#studio-intro .intro-enter:disabled { opacity: .5; background: #17317144; }
+#studio-intro.is-entering .intro-stage { transform: translate(-50%,-50%) scale(6.5); transition: transform 1.1s cubic-bezier(.65,0,.2,1), filter 1.1s; }
+#studio-intro .intro-cassettes {
+    position: absolute; left: 62%; top: 76%; width: 22%; height: 19%;
+    perspective: 900px; transform-style: preserve-3d;
+}
+#studio-intro .intro-cassette {
+    position: absolute; left: var(--left); top: var(--top);
+    width: 10cqw; height: 1.7cqw; padding: 0; margin: 0;
+    border: 0; background: transparent; color: #28241d; cursor: pointer;
+    transform-style: preserve-3d; z-index: var(--order);
+    transform: translateZ(0) rotateX(calc(-15deg + var(--py, 0) * -9deg)) rotateY(calc(-8deg + var(--px, 0) * 13deg)) rotateZ(var(--angle));
+    transition: transform .42s cubic-bezier(.2,.8,.2,1);
+    -webkit-tap-highlight-color: transparent;
+}
+#studio-intro .intro-cassette:hover,
+#studio-intro .intro-cassette:focus-visible {
+    transform: translateY(-2.3cqw) translateZ(65px) rotateX(-30deg) rotateY(-13deg) rotateZ(-4deg);
+    z-index: 20;
+}
+#studio-intro .intro-cassette:focus-visible { outline: 2px solid #fff3dc; outline-offset: 8px; }
+#studio-intro .tape-face { position: absolute; display: block; box-sizing: border-box; backface-visibility: hidden; border: 1px solid #171511; }
+#studio-intro .tape-front, #studio-intro .tape-back { inset: 0; background: var(--tape); }
+#studio-intro .tape-front {
+    transform: translateZ(2.7cqw); padding: .23cqw .5cqw;
+    display: flex; align-items: center; gap: .5cqw;
+    box-shadow: inset 0 2px 2px #ffffff22, 0 .5cqw .7cqw #0b07054d;
+}
+#studio-intro .tape-front b { flex: 1; background: #e4d5b6; font: bold .63cqw 'Courier New',monospace; letter-spacing: .015em; white-space: nowrap; padding: .12cqw .2cqw; }
+#studio-intro .tape-front small { color: #f1e6cb; font: .52cqw monospace; }
+#studio-intro .tape-back { transform: rotateY(180deg) translateZ(2.7cqw); }
+#studio-intro .tape-top, #studio-intro .tape-bottom {
+    left: 0; width: 10cqw; height: 5.4cqw; background: #292724;
+}
+#studio-intro .tape-top { top: 0; transform-origin: top; transform: translateZ(-2.7cqw) rotateX(90deg); background: linear-gradient(135deg,#5e5a51,#292724); }
+#studio-intro .tape-bottom { bottom: 0; transform-origin: bottom; transform: translateZ(-2.7cqw) rotateX(-90deg); }
+#studio-intro .tape-left, #studio-intro .tape-right { top: 0; width: 5.4cqw; height: 1.7cqw; background: #29251f; }
+#studio-intro .tape-left { left: 0; transform-origin: left; transform: translateZ(-2.7cqw) rotateY(-90deg); }
+#studio-intro .tape-right { right: 0; transform-origin: right; transform: translateZ(-2.7cqw) rotateY(90deg); }
+#studio-intro .tape-label { position: absolute; inset: .6cqw; border: 1px solid #141414; background: #d1c5ad; display: grid; place-items: center; font: bold .65cqw monospace; color: #24211b; }
+#studio-intro .tape-reels { width: 75%; height: 1.4cqw; border-radius: .3cqw; background: #161615; display: flex; justify-content: space-between; align-items: center; padding: 0 .5cqw; }
+#studio-intro .tape-reels i { width: 1.1cqw; height: 1.1cqw; border: .3cqw dotted #d9d4c7; border-radius: 50%; }
+/* En vertical, acercamos las cintas a la zona visible junto al monitor. */
+@media (max-aspect-ratio: 1/1) {
+    #studio-intro .intro-cassettes { left: 49%; top: 82%; transform: scale(.85); transform-origin: left top; }
+    #studio-intro .intro-cassette { width: 10cqw; }
+}
+@media (prefers-reduced-motion: reduce) {
+    #studio-intro .intro-stage { transform: translate(-50%,-50%); }
+    #studio-intro .intro-cassette:hover,
+    #studio-intro .intro-cassette:focus-visible { transform: translateZ(0) rotateX(-15deg) rotateY(-8deg) rotateZ(var(--angle)); outline: 2px solid #fff3dc; }
+}

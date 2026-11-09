@@ -1,0 +1,33 @@
+// Mascota y borde inferior del hero antiguo. No borrar sin revisar selectores.
+/* MASCOTA: posición absoluta; las variables del mouse generan un parallax leve. */
+.mascot-scene {
+    position: absolute;
+    width: 43%;
+    right: 13%;
+    bottom: 11px;
+    pointer-events: none;
+    transform: translate(var(--mascot-x, 0px), var(--mascot-y, 0px));
+    transition: transform 0.3s ease-out;
+}
+.mascot-scene img {
+    animation: bob 4.8s ease-in-out infinite;
+    transform-origin: bottom;
+}
+/* Borde inferior que funciona como borde de pantalla para la mascota. */
+.hero-floor {
+    border-top: 1px solid var(--ink);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 60px;
+    position: relative;
+    z-index: 2;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+}
+.hero-floor button {
+    border: 0;
+    background: var(--cream);
+    font-size: 10px;
+    padding: 10px;
+}

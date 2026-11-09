@@ -1,0 +1,22 @@
+// Enlaces de texto, botón de historia y acciones del proyecto.
+.text-link,
+.story-button {
+    font-size: 13px;
+    font-weight: 700;
+    border: 0;
+    border-bottom: 1px solid currentColor;
+    padding: 8px 0;
+    background: transparent;
+}
+/* Acciones diferentes: historia dentro del sitio y enlace a la web original. */
+.project-actions {
+    display: flex;
+    gap: 23px;
+    align-items: center;
+}
+.project-actions > a {
+    font-size: 12px;
+}
+.project-actions > a:hover {
+    color: var(--blue);
+}

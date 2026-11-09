@@ -1,0 +1,22 @@
+// Franja de servicios.
+/* FRANJA AZUL: resumen de áreas creativas, recortado en pantallas pequeñas. */
+.service-strip {
+    background: var(--blue);
+    color: var(--cream);
+    padding: 21px 0;
+    overflow: hidden;
+}
+.service-strip div {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    gap: 40px;
+    white-space: nowrap;
+    font-size: clamp(12px, 1.4vw, 20px);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+}
+.service-strip b {
+    font-size: 32px;
+    color: var(--orange);
+}

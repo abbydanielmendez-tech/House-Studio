@@ -1,0 +1,21 @@
+// Modo oscuro original y ajustes por tema.
+/* HOUSE-STUDIO · MODO OSCURO Y ANIMACIONES DEL PORTAFOLIO
+   Estos estilos no modifican la pantalla de carga. */
+:root { color-scheme: light; }
+:root[data-theme="dark"] {
+    color-scheme: dark;
+    --cream: #181a20;
+    --paper: #20232b;
+    --ink: #fff3dc;
+    --muted: #c7bdad;
+    --line: #42434b;
+    --blue: #79a4ff;
+}
+/* Los colores de las piezas originales se conservan; no se invierten imágenes. */
+[data-theme="dark"] .service-strip,
+[data-theme="dark"] .film:not(.film-second) { background: #193d8e; color: #fff3dc; }
+[data-theme="dark"] .film-second { background: #442d24; color: #fff3dc; }
+[data-theme="dark"] .cover-art { color: #191919; }
+[data-theme="dark"] .cover-festival { background: #193d8e; color: #fff3dc; }
+[data-theme="dark"] .skip { background: #fff3dc; color: #191919; }
+[data-theme="dark"] .hero-floor button { color: #fff3dc; }

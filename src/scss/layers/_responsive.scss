@@ -1,0 +1,242 @@
+/* 7. RESPONSIVE · Tableta y teléfono, sin desplazamiento horizontal. */
+
+/* PANTALLAS GRANDES: limita el título para que no siga creciendo. */
+@media (min-width: 1600px) {
+    .hero h1 {
+        font-size: 210px;
+    }
+}
+
+/* TABLET: reduce espacios y simplifica las columnas. */
+@media (max-width: 900px) {
+    .hero-meta {
+        font-size: 8px;
+    }
+    .hero h1 {
+        margin-bottom: 40px;
+    }
+    .hero-bottom p {
+        font-size: 19px;
+        max-width: 240px;
+    }
+    .mascot-scene {
+        width: 45%;
+        right: 10%;
+        bottom: 26px;
+    }
+    .hello-note {
+        font-size: 15px;
+    }
+    .section {
+        padding-block: 75px;
+    }
+    .section-head {
+        align-items: flex-start;
+    }
+    .section-head > p {
+        max-width: 240px;
+        font-size: 12px;
+    }
+    .project:first-child {
+        display: block;
+    }
+    .project:first-child .project-cover {
+        aspect-ratio: 1.8;
+    }
+    .project:first-child .project-info {
+        padding: 25px;
+    }
+    .project-grid {
+        gap: 35px 22px;
+    }
+    .about-grid {
+        gap: 40px;
+    }
+    .film-layout {
+        gap: 40px;
+    }
+    .film-art {
+        height: 290px;
+    }
+    .cover-art strong {
+        font-size: 38px;
+    }
+}
+
+/* MÓVIL: una columna, navegación compacta y títulos adaptados. */
+@media (max-width: 600px) {
+    .wrap {
+        width: 90%;
+    }
+    .nav {
+        height: 85px;
+    }
+    .wordmark {
+        font-size: 22px;
+    }
+    .nav-contact {
+        font-size: 11px;
+        padding: 9px 12px;
+    }
+    .nav-contact span {
+        display: none;
+    }
+    .hero-meta span:last-child {
+        display: none;
+    }
+    .hero-brand {
+        margin-top: 38px;
+        font-size: 23px;
+    }
+    .hero h1 {
+        font-size: 15.2vw;
+        margin: 9px 0 25px;
+    }
+    .hero-bottom {
+        min-height: 270px;
+    }
+    .hero-bottom p {
+        font-size: 19px;
+        max-width: 210px;
+    }
+    .hero-bottom p span {
+        font-size: 11px;
+        max-width: 160px;
+    }
+    .circle-link {
+        width: 48px;
+        height: 48px;
+        font-size: 28px;
+    }
+    .mascot-scene {
+        width: 69%;
+        right: -6%;
+        bottom: 35px;
+    }
+    .hello-note {
+        top: 2%;
+        right: 13%;
+        font-size: 13px;
+    }
+    .hero-floor {
+        font-size: 8px;
+    }
+    .hero-floor button {
+        font-size: 9px;
+    }
+    .service-strip div {
+        width: 1050px;
+        justify-content: flex-start;
+        font-size: 13px;
+        gap: 25px;
+    }
+    .service-strip {
+        padding: 12px 0;
+    }
+    .service-strip b {
+        font-size: 24px;
+    }
+    .section-head {
+        display: block;
+        margin-bottom: 30px;
+    }
+    .section-head > p {
+        margin-top: 24px;
+        max-width: 100%;
+    }
+    .section {
+        padding-block: 62px;
+    }
+    .eyebrow {
+        font-size: 9px;
+        margin-bottom: 20px;
+    }
+    .project-grid {
+        grid-template-columns: 1fr;
+    }
+    .project:first-child {
+        grid-column: auto;
+    }
+    .project:first-child .project-cover {
+        aspect-ratio: 1.4;
+    }
+    .project-info h3,
+    .project:first-child h3 {
+        font-size: 25px;
+    }
+    .cover-art strong {
+        font-size: 48px;
+    }
+    .film-layout {
+        grid-template-columns: 1fr;
+        padding-block: 50px;
+        gap: 30px;
+    }
+    .film-art {
+        height: 280px;
+        width: 82%;
+    }
+    .film h2 {
+        font-size: 49px;
+    }
+    .film-second .film-art {
+        height: 220px;
+    }
+    .about-grid {
+        grid-template-columns: 1fr;
+        gap: 50px;
+    }
+    .about-art {
+        max-width: 300px;
+        margin: auto;
+    }
+    .about-art span {
+        font-size: 24px;
+    }
+    .contact .circle-link {
+        width: 62px;
+        height: 62px;
+        font-size: 34px;
+        flex-shrink: 0;
+    }
+    .contact h2 {
+        font-size: 66px;
+    }
+    .contact-bottom {
+        display: block;
+    }
+    .footer-meta {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 28px;
+    }
+    .footer-meta .wordmark {
+        width: 70px;
+    }
+    dialog {
+        padding: 27px;
+    }
+    #dialog-content h2 {
+        font-size: 31px;
+    }
+    .film {
+        min-height: auto;
+    }
+}
+
+/* ACCESIBILIDAD: respeta la preferencia del sistema de reducir movimiento. */
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+    html:not([data-motion="on"]) *,
+    html:not([data-motion="on"]) *::before,
+    html:not([data-motion="on"]) *::after {
+        animation: none !important;
+        transition: none !important;
+    }
+    html:not([data-motion="on"]) .hero-light {
+        display: none;
+    }
+}
+

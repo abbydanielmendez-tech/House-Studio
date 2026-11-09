@@ -1,0 +1,29 @@
+// Tipografía: .eyebrow, títulos y párrafos.
+/* Etiqueta pequeña numerada sobre cada título de sección. */
+.eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    margin: 0 0 25px;
+}
+h1,
+h2,
+h3,
+p {
+    margin-top: 0;
+}
+/* TÍTULOS: tamaño adaptable y poco espacio entre letras. */
+h2 {
+    font-size: clamp(38px, 4.8vw, 70px);
+    line-height: 1.03;
+    letter-spacing: -0.055em;
+    font-weight: 800;
+    margin-bottom: 0;
+}
+h2 em {
+    font-family: Georgia, serif;
+    font-weight: 400;
+}
+p {
+    line-height: 1.6;
+}

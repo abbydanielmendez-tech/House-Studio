@@ -1,0 +1,23 @@
+{
+  "name": "house-studio",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=20.19.0" },
+  "scripts": {
+    "dev": "gulp dev",
+    "build": "gulp build",
+    "check": "node scripts/check-build.mjs"
+  },
+  "dependencies": {
+    "animejs": "^4.0.0"
+  },
+  "devDependencies": {
+    "browser-sync": "^3.0.3",
+    "gulp": "^5.0.0",
+    "sass": "^1.86.0",
+    "sharp": "^0.34.0",
+    "terser": "^5.39.0",
+    "jsdom": "^26.1.0"
+  }
+}

@@ -1,0 +1,9 @@
+// Ajustes móviles y reducción de movimiento de tema, franjas y reveal.
+@media (max-width: 600px) {
+    .theme-toggle { right: 14px; bottom: 14px; padding: 11px 13px; }
+    .service-strip .marquee-group { gap: 24px; }
+}
+@media (prefers-reduced-motion: reduce) {
+    html:not([data-motion="on"]) .scroll-reveal { opacity: 1 !important; translate: none !important; transition: none; }
+    html:not([data-motion="on"]) .marquee-track, html:not([data-motion="on"]) .type-letter.is-cursor::after { animation: none !important; }
+}

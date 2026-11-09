@@ -1,0 +1,24 @@
+// Variables CSS originales (:root). La paleta vigente se define en layers/_atmosphere.
+/*
+HOUSE-STUDIO · STYLES.CSS
+Controla cómo se ve la página. No contiene datos ni lógica de filtros.
+Buscá el número de sección para ubicar cada bloque.
+Un selector .clase afecta a todos los elementos con esa clase en index.html.
+Una variable var(--nombre) toma su valor desde :root.
+clamp(mínimo, adaptable, máximo) hace que los tamaños respondan a la pantalla.
+*/
+/* ==========================================================
+   1. IDENTIDAD · Cambiá estas variables para ajustar la marca.
+   ========================================================== */
+:root {
+    --cream: #fff3dc;
+    --blue: #2463eb;
+    --orange: #ff8200;
+    --ink: #191919;
+    --line: #d7cbb7;
+    --muted: #686051;
+    --paper: #fbefda;
+    --radius: 18px;
+    --light-x: 50%;
+    --light-y: 50%;
+}

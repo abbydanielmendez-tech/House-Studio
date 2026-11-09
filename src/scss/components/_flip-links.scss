@@ -1,0 +1,50 @@
+// ENLACES "FLIP" DEL PIE (footer .footer-links)
+// Enlaces tipográficos muy grandes. Al pasar el cursor (o enfocar con teclado) las letras suben una tras otra y dejan
+// ver el mismo texto en color de acento. Referencia: componente "FlipLink" de React + Motion, en CSS nativo.
+//
+// CÓMO FUNCIONA: js/flip-links.js parte el texto en dos capas de letras sueltas (.flip-a visible y .flip-b escondida
+// debajo), cada letra con su posición en --i. Aquí cada letra tiene una transición de transform con retraso
+// calc(--i × pausa); el enlace recorta (overflow: hidden) lo que sale de su caja.
+//   · .flip-a: de translateY(0) a translateY(-100%) → la letra normal sale por arriba
+//   · .flip-b: de translateY(100%) a translateY(0)  → la letra de acento entra desde abajo
+//   (el recorrido suma .14em extra para que no queden restos visibles por el margen interno de cada capa)
+//
+// VARIABLES (en .footer-links): --flip-time = duración de cada letra (0,25 s) · --flip-stagger = pausa entre letras
+// (0,025 s), iguales al original. Para un efecto más lento o más "ola", súbelas.
+
+.footer-links {
+    --flip-time: .25s; --flip-stagger: .025s;
+    display: grid; justify-items: start; gap: clamp(0px, .5vw, 8px);
+    padding-bottom: clamp(36px, 6vw, 76px);
+}
+.flip-link {
+    position: relative; display: block; max-width: 100%; overflow: hidden; white-space: nowrap;
+    font: 700 clamp(2.5rem, 9.2vw, 7.5rem) / .92 Arial, Helvetica, sans-serif; letter-spacing: -.055em; text-transform: uppercase;
+    color: var(--ink); margin-block: -.07em;   // compensa el margen interno de las capas para que los enlaces queden juntos
+    // Sin JavaScript (no hay capas): el enlace sigue siendo un enlace normal que cambia de color.
+    &:not([data-flip-ready]):hover { color: var(--blue); }
+}
+.flip-layer {
+    display: block;
+    // Margen interno en las DOS capas (así siguen alineadas): a la derecha, porque el espaciado negativo entre letras hace que
+    // la última se salga de su caja y el recorte la cortaría; arriba, para que no se corten las tildes de las mayúsculas.
+    padding: .12em .08em .02em 0;
+}
+.flip-layer span { display: inline-block; transition: transform var(--flip-time) ease-in-out calc(var(--i) * var(--flip-stagger)); }
+.flip-b { position: absolute; inset: 0; color: var(--blue); }
+.flip-b span { transform: translateY(calc(100% + .14em)); }   // un poco más lejos que su altura: el margen interno de la capa no deja ver restos
+
+// Disparador: cursor real o foco de teclado (en táctil no hay "pasar el cursor", el toque navega directamente).
+.flip-link:focus-visible { outline: 2px solid var(--blue); outline-offset: 6px; }
+.flip-link:focus-visible .flip-a span { transform: translateY(calc(-100% - .14em)); }
+.flip-link:focus-visible .flip-b span { transform: translateY(0); }
+@media (hover: hover) {
+    .flip-link:hover .flip-a span { transform: translateY(calc(-100% - .14em)); }
+    .flip-link:hover .flip-b span { transform: translateY(0); }
+}
+
+// Movimiento reducido: sin recorrido, solo cambia el color. Como en el resto del sitio, no aplica si <html data-motion="on">
+// (lo fija script.js).
+@media (prefers-reduced-motion: reduce) {
+    html:not([data-motion="on"]) .flip-layer span { transition-duration: .01ms !important; transition-delay: 0s !important; }
+}

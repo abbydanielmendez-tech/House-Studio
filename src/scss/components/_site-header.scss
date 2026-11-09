@@ -1,0 +1,124 @@
+// CABECERA FLOTANTE: logo · botón "Hablemos" · menú desplegable estilo hamburguesa (en escritorio y en móvil).
+// Vive sobre el hero, que siempre es oscuro, por eso sus colores no dependen del tema.
+// Se escribe con prefijo header.nav para ganar a las reglas antiguas de _atmosphere / _responsive.
+//
+// EL MENÚ (referencia: componente "StaggeredDropDown" de React + Motion, en CSS y JS nativos):
+//   · El botón muestra "Menú" y un icono de hamburguesa que se transforma en una X al abrir.
+//   · Al abrir, el panel se despliega desde arriba (scaleY 0 → 1) y DESPUÉS entran las opciones una tras otra
+//     (opacidad + desplazamiento desde arriba); cada icono aparece creciendo (scale 0 → 1), un instante después.
+//   · Al cerrar ocurre al revés: primero salen las opciones y al final se pliega el panel.
+//   js/site-menu.js solo cambia la clase .is-open y el atributo aria-expanded; todo el movimiento es CSS.
+//
+// VARIABLES (en .site-menu): --enter = lo que tarda el panel en desplegarse · --stagger = pausa entre opciones al
+// abrir · --stagger-out = pausa entre opciones al cerrar · --n = cantidad de opciones (el JS la ajusta sola).
+
+$spring: cubic-bezier(.2, .8, .2, 1);       // curva suave del sitio
+$pop: cubic-bezier(.34, 1.56, .64, 1);      // con un pequeño rebote, para los iconos
+
+header.nav {
+    position: absolute; top: 0; left: 0; right: 0; z-index: 30; height: auto; padding-block: clamp(14px, 2.6vh, 26px);
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    border: 0; background: none; color: #fff;
+    .wordmark { color: #fff; }
+    .nav-actions { display: flex; align-items: center; gap: 10px; }
+    .nav-contact {
+        padding: 11px 20px; border: 0; border-radius: 999px; background: #fff; color: #0c1014; font-size: 13px; font-weight: 600; white-space: nowrap;
+        &:hover { background: #e0b37b; color: #0c1014; }
+        span { margin-left: 10px; display: inline-block; }
+    }
+}
+
+/* 1. El contenedor y el botón */
+.site-menu { --enter: .3s; --stagger: .1s; --stagger-out: .05s; --n: 6; position: relative; }
+header.nav .menu-button {
+    display: inline-flex; align-items: center; gap: 12px; margin: 0; padding: 11px 18px 11px 20px; cursor: pointer;
+    border: 1px solid rgba(255, 255, 255, .12); border-radius: 999px; color: #fff; font: 600 13px/1 Arial, Helvetica, sans-serif;
+    background: rgba(20, 24, 28, .58); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+    transition: background .25s ease, border-color .25s ease;
+    &:hover { background: rgba(255, 255, 255, .14); border-color: rgba(255, 255, 255, .3); }
+    &:focus-visible { outline: 2px solid #e0b37b; outline-offset: 3px; }
+}
+.site-menu.is-open .menu-button { background: rgba(255, 255, 255, .16); border-color: rgba(255, 255, 255, .3); }
+
+// Hamburguesa: dos líneas de distinto largo que, al abrir, se cruzan y forman una X.
+.menu-icon {
+    position: relative; flex: none; width: 18px; height: 12px;
+    i { position: absolute; left: 0; height: 2px; border-radius: 2px; background: currentColor; transition: transform .38s $spring, width .38s $spring, top .38s $spring; }
+    i:nth-child(1) { top: 1px; width: 18px; }
+    i:nth-child(2) { top: 9px; width: 11px; }
+}
+.site-menu.is-open .menu-icon i {
+    top: 5px; width: 18px;
+    &:nth-child(1) { transform: rotate(45deg); }
+    &:nth-child(2) { transform: rotate(-45deg); }
+}
+
+/* 2. El panel: cerrado = aplastado desde arriba e invisible; abierto = se despliega */
+header.nav .menu-panel {
+    position: absolute; top: calc(100% + 12px); right: 0; z-index: 2; box-sizing: border-box;
+    width: min(17rem, calc(100vw - 2rem)); margin: 0; padding: 8px; border-radius: 20px;
+    background: rgba(13, 15, 18, .9); border: 1px solid rgba(255, 255, 255, .12);
+    box-shadow: 0 34px 70px -28px rgba(0, 0, 0, .9); -webkit-backdrop-filter: blur(22px) saturate(1.2); backdrop-filter: blur(22px) saturate(1.2);
+    display: block; font-size: 14px; color: #fff;
+    transform-origin: top; transform: scaleY(0); visibility: hidden;
+    // Al CERRAR: espera a que las opciones salgan (afterChildren) y entonces se pliega; visibility se oculta al final.
+    transition: transform .28s $spring calc(.26s + var(--n) * var(--stagger-out)), visibility 0s calc(.54s + var(--n) * var(--stagger-out));
+    ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 2px; }
+}
+.site-menu.is-open .menu-panel {
+    transform: scaleY(1); visibility: visible;
+    transition: transform var(--enter) $spring, visibility 0s;   // al ABRIR: el panel va primero (beforeChildren)
+}
+
+/* 3. Las opciones: cada una entra desde arriba con su retraso (--i = posición) */
+.menu-item {
+    opacity: 0; transform: translateY(-15px);
+    transition: opacity .25s ease calc(var(--i) * var(--stagger-out)), transform .25s ease calc(var(--i) * var(--stagger-out));
+}
+.site-menu.is-open .menu-item {
+    opacity: 1; transform: none;
+    transition-delay: calc(var(--enter) * .85 + var(--i) * var(--stagger));
+}
+.menu-item--extra { margin-top: 6px; padding-top: 6px; border-top: 1px solid rgba(255, 255, 255, .1); }   // WhatsApp, separado del resto
+
+header.nav .menu-panel a {
+    display: flex; align-items: center; gap: 12px; padding: 11px 12px; border-radius: 12px;
+    font-size: 14px; font-weight: 500; white-space: nowrap; color: rgba(255, 255, 255, .84);
+    transition: background .2s ease, color .2s ease;
+    &::after { content: none; }                                 // sin el subrayado animado heredado de _hover-fx
+    sup { margin-left: 3px; font-size: 9px; color: #e0b37b; }
+    em { display: inline-flex; align-items: center; font-style: normal; }
+    .icon-arrow { width: 14px; height: 14px; margin-left: 4px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    &:focus-visible { outline: 2px solid #e0b37b; outline-offset: -2px; background: rgba(255, 255, 255, .1); color: #fff; }
+    @media (hover: hover) { &:hover { background: rgba(255, 255, 255, .1); color: #fff; } }
+    &:active { background: rgba(255, 255, 255, .14); }
+}
+// El icono aparece creciendo (scale 0 → 1) y bajando un poco, justo después de que entra su opción.
+.menu-ico {
+    display: inline-flex; flex: none; color: rgba(255, 255, 255, .6);
+    transform: scale(0) translateY(-7px);
+    transition: transform .3s $pop calc(var(--i) * var(--stagger-out)), color .2s ease;
+    svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+}
+.site-menu.is-open .menu-ico { transform: none; transition-delay: calc(var(--enter) * .85 + var(--i) * var(--stagger) + .12s), 0s; }
+header.nav .menu-panel a:focus-visible .menu-ico { color: #e0b37b; }
+@media (hover: hover) { header.nav .menu-panel a:hover .menu-ico { color: #e0b37b; } }
+
+// Pantallas táctiles: objetivos de toque de al menos 44 px (igual que el resto del sitio, ver _polish.scss).
+@media (pointer: coarse) {
+    header.nav .menu-button, header.nav .menu-panel a { min-height: 44px; box-sizing: border-box; }
+}
+
+/* 4. Móvil: el botón "Hablemos" sale del encabezado (la opción Contacto del menú cumple esa función) */
+@media (max-width: 560px) {
+    header.nav .nav-contact { display: none; }
+    header.nav .menu-button { padding: 12px 16px 12px 18px; }
+}
+
+/* 5. Movimiento reducido: sin animaciones. Como en el resto del sitio, no aplica si <html data-motion="on">
+      (lo fija script.js). */
+@media (prefers-reduced-motion: reduce) {
+    html:not([data-motion="on"]) {
+        .menu-button, .menu-icon i, .menu-panel, .menu-item, .menu-ico, .menu-panel a { transition-duration: .01ms !important; transition-delay: 0s !important; }
+    }
+}

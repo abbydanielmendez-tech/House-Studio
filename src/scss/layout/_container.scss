@@ -1,0 +1,23 @@
+// Contenedor .wrap, espaciado .section y enlace de salto .skip.
+/* CONTENEDOR: centra el contenido y evita líneas demasiado anchas. */
+.wrap {
+    width: min(1320px, 90%);
+    margin-inline: auto;
+}
+/* ESPACIADO: separación vertical compartida por las secciones. */
+.section {
+    padding-block: 110px;
+}
+/* Enlace de salto: aparece solo al recibir foco del teclado. */
+.skip {
+    position: fixed;
+    top: -80px;
+    left: 20px;
+    z-index: 20;
+    background: var(--ink);
+    color: white;
+    padding: 16px;
+}
+.skip:focus {
+    top: 10px;
+}

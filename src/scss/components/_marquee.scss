@@ -1,0 +1,12 @@
+// Franjas infinitas (servicios y Carmencita).
+/* Dos grupos idénticos: al llegar a la mitad el ciclo vuelve sin salto visible. */
+.service-strip .marquee-track {
+    display: flex; gap: 0; width: max-content; justify-content: flex-start;
+    animation: studio-marquee 38s linear infinite; will-change: transform;
+}
+.service-strip .marquee-group {
+    display: flex; align-items: center; justify-content: space-around;
+    flex: 0 0 auto; min-width: 100vw; gap: 40px; padding-inline: 20px;
+    white-space: nowrap; box-sizing: border-box;
+}
+@keyframes studio-marquee { to { transform: translateX(-50%); } }

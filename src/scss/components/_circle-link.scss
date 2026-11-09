@@ -1,0 +1,18 @@
+// Botón circular (contacto).
+/* BOTÓN CIRCULAR: usado para explorar y contactar. */
+.circle-link {
+    width: 76px;
+    height: 76px;
+    border: 1px solid var(--ink);
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-size: 39px;
+    transition:
+        background 0.3s,
+        transform 0.3s;
+}
+.circle-link:hover {
+    background: var(--orange);
+    transform: rotate(10deg);
+}

@@ -1,0 +1,87 @@
+// Hero antiguo (reemplazado visualmente por el jardín). No borrar sin revisar selectores.
+/* 2. HERO · Luz local, título grande y mascota en capas. */
+
+/* HERO: overflow e isolation mantienen la luz dentro de esta sección. */
+.hero {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+}
+/* LUZ: JavaScript actualiza --light-x y --light-y con la posición del mouse. */
+.hero-light {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+        circle 250px at var(--light-x) var(--light-y),
+        #ffd99899,
+        transparent 100%
+    );
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.5s;
+    pointer-events: none;
+}
+.hero:hover .hero-light {
+    opacity: 1;
+}
+/* Referencia de posición para colocar la mascota y el resto de capas. */
+.hero-inner {
+    position: relative;
+    padding-top: 28px;
+}
+/* Textos secundarios situados sobre el nombre del estudio. */
+.hero-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 9px;
+    letter-spacing: 0.13em;
+    color: var(--muted);
+}
+/* HOUSE-STUDIO: nombre pequeño encima del título principal. */
+.hero-brand {
+    text-align: center;
+    font-family: Georgia, serif;
+    font-style: italic;
+    font-size: clamp(20px, 2.5vw, 36px);
+    color: var(--blue);
+    margin: 48px 0 0;
+}
+/* PORTAFOLIO: título grande, grueso y azul; ajusta aquí su tamaño. */
+.hero h1 {
+    font-size: clamp(70px, 15.1vw, 221px);
+    letter-spacing: -0.085em;
+    line-height: 1.04;
+    font-weight: 900;
+    color: var(--blue);
+    margin: 0 0 50px;
+    text-align: center;
+}
+.title-dot {
+    color: var(--orange);
+}
+/* Distribución del texto de presentación y flecha de exploración. */
+.hero-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    min-height: 190px;
+    padding-bottom: 20px;
+}
+.hero-bottom p {
+    font-size: 23px;
+    line-height: 1.35;
+    letter-spacing: -0.6px;
+    max-width: 350px;
+}
+.hero-bottom p em {
+    font-family: Georgia, serif;
+    font-weight: 400;
+}
+.hero-bottom p span {
+    font-size: 12px;
+    display: block;
+    letter-spacing: 0;
+    max-width: 220px;
+    line-height: 1.5;
+    margin-top: 20px;
+}

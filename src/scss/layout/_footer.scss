@@ -1,0 +1,23 @@
+// Pie de página.
+/* PIE: información de autoría y retorno al inicio. */
+.footer {
+    border-top: 1px solid var(--line);
+    padding-top: clamp(40px, 6vw, 84px);
+    padding-bottom: 35px;
+}
+/* Franja inferior: logo, autoría, año y "Volver arriba". Los enlaces grandes van arriba (components/_flip-links). */
+.footer-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 25px;
+    padding-top: 28px;
+    border-top: 1px solid var(--line);
+}
+.footer-meta p,
+.footer-meta > span,
+.footer-meta > a:last-child {
+    font-size: 10px;
+    margin: 0;
+    line-height: 1.6;
+}

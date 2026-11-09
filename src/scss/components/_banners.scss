@@ -1,0 +1,63 @@
+/* 4. BANNERS · Ilustraciones de respaldo para tus futuros videos. */
+
+/* BANNER: gran separador visual, también admite un video real con controles. */
+.film {
+    min-height: 510px;
+    position: relative;
+    overflow: hidden;
+    background: var(--blue);
+    color: var(--cream);
+    display: grid;
+    align-items: center;
+}
+/* Composición de texto e ilustración cuando todavía no hay video. */
+.film-layout {
+    width: min(1320px, 90%);
+    margin: auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+    padding-block: 65px;
+}
+.film h2 {
+    white-space: pre-line;
+    font-size: clamp(42px, 5.5vw, 82px);
+}
+.film p:last-child {
+    font-size: 13px;
+    margin-top: 25px;
+}
+/* Marco de la ilustración con ligera inclinación y sombra. */
+.film-art {
+    height: 360px;
+    transform: rotate(5deg);
+    overflow: hidden;
+    border: 10px solid var(--cream);
+    box-shadow: 15px 18px 0 #19191933;
+    max-width: 480px;
+    margin: auto;
+}
+.film-art img {
+    height: 100%;
+    object-fit: cover;
+}
+/* Segundo banner: variación cálida en naranja. */
+.film-second {
+    background: #ec8650;
+    color: var(--ink);
+}
+.film-second .film-art {
+    transform: rotate(-4deg);
+    height: 310px;
+}
+/* Videos sin deformación, sobre fondo oscuro. */
+.film video {
+    width: 100%;
+    max-height: 650px;
+    background: var(--ink);
+    display: block;
+}
+.video-caption {
+    padding: 30px 5%;
+}

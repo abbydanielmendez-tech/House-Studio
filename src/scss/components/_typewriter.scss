@@ -1,0 +1,9 @@
+// Letras del título con efecto de tipeo (heredado).
+/* Reserva el ancho de todo el título para evitar saltos al escribirlo. */
+.type-letter { position: relative; }
+.type-letter.is-hidden { visibility: hidden; }
+.type-letter.is-cursor::after {
+    content: ''; position: absolute; right: -.025em; top: .13em; height: .8em;
+    width: 2px; background: var(--orange); animation: type-blink .65s steps(1) infinite;
+}
+@keyframes type-blink { 50% { opacity: 0; } }

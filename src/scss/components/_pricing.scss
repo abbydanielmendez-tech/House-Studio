@@ -1,0 +1,274 @@
+@use "sass:color";
+@use "../abstracts/tokens";
+
+// PRECIOS Y PAQUETES (#precios) · tres tarjetas por proyecto, después de PROYECTOS.
+// Es una banda oscura fija: en modo claro actúa como pausa cinematográfica, igual que la franja de servicios.
+// Movimiento "squishy": la tarjeta crece, las formas del fondo se deforman con rebote (easeInOutBack) y el precio se asienta.
+// El mismo estado se activa con el cursor (mouse), con el teclado (foco) y en táctil (js/pricing.js añade .is-active).
+// Todo el movimiento es transform/opacity: solo compositor. Lógica: js/pricing.js.
+
+$back: cubic-bezier(.68, -.6, .32, 1.6);   // equivalente CSS de "backInOut" (SquishyCard)
+$soft: cubic-bezier(.2, .7, .2, 1);        // la misma curva suave del resto del sitio
+$squish: .9s;
+
+// Estado "estirado": un solo mixin para hover, foco de teclado y táctil.
+@mixin squished {
+    transform: scale(1.035);
+    border-color: rgba(tokens.$pr-accent, .38);
+    box-shadow: 0 34px 70px -34px rgba(0, 0, 0, .95), 0 0 0 1px rgba(tokens.$pr-accent, .06);
+    &::before { opacity: 1; }
+    .price-bg { transform: scale(1.4); }
+    .sh-1 { transform: var(--h1, none); }
+    .sh-2 { transform: var(--h2, none); }
+    .sh-3 { transform: var(--h3, none); }
+    .price-amount { transform: scale(1); }
+    .tier-meter i.on { background: var(--pr-amber); }
+}
+
+/* 1. Banda y encabezado */
+.pricing {
+    @include tokens.emit(tokens.$pricing);
+    position: relative; isolation: isolate; color-scheme: dark;
+    padding-block: clamp(84px, 10vw, 150px);
+    color: var(--pr-ivory);
+    background:
+        radial-gradient(ellipse 55% 45% at 88% 0%, rgba(tokens.$pr-accent, .12), transparent 70%),
+        radial-gradient(ellipse 70% 55% at 0% 100%, rgba(20, 37, 45, .85), transparent 72%),
+        var(--pr-black);
+    border-block: 1px solid rgba(48, 54, 56, .75);
+
+    // Anula los colores globales del tema (que en modo claro serían oscuros) solo dentro de la banda.
+    .eyebrow { color: var(--pr-amber); }
+    h2 { color: var(--pr-ivory); }
+    h2 em { color: var(--pr-amber); }
+    .section-head { margin-bottom: clamp(26px, 3.4vw, 42px); }
+    .section-head > p { color: var(--pr-silver); opacity: .82; }
+    a:focus-visible { outline-color: var(--pr-ivory); }
+}
+// Línea editorial: tramo ámbar corto + filete grafito.
+.pricing-rule {
+    height: 1px; margin-bottom: clamp(38px, 5vw, 64px);
+    background: linear-gradient(90deg, var(--pr-amber) 0 72px, rgba(48, 54, 56, .9) 72px);
+}
+
+/* 2. Rejilla: 3 columnas en escritorio, una en tablet y móvil */
+.pricing-grid {
+    display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(16px, 2vw, 28px); align-items: start;   // cada tarjeta crece sola al abrir sus detalles
+}
+
+/* 3. Tarjeta */
+.price-card {
+    --h1: none; --h2: none; --h3: none;
+    --shape-a: rgba(197, 200, 200, .055); --shape-b: rgba(197, 200, 200, .04); --shape-c: #{rgba(tokens.$pr-accent, .3)};
+    position: relative; display: flex; overflow: hidden; isolation: isolate; min-width: 0;
+    border-radius: var(--radius, 14px); background: var(--pr-carbon);
+    border: 1px solid rgba(197, 200, 200, .11);
+    box-shadow: 0 22px 50px -34px rgba(0, 0, 0, .9);
+    transition: transform $squish $back, border-color .5s ease, box-shadow .7s ease;
+
+    // Borde iluminado: un anillo de 1 px con un foco ámbar que sigue al cursor (--px/--py los escribe pricing.js).
+    &::before {
+        content: ""; position: absolute; inset: 0; z-index: 3; padding: 1px; border-radius: inherit; pointer-events: none;
+        background: radial-gradient(280px circle at var(--px, 50%) var(--py, 0%), rgba(color.scale(tokens.$pr-accent, $lightness: 22%), .9), transparent 65%);
+        -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+        -webkit-mask-composite: xor; mask-composite: exclude;
+        opacity: 0; transition: opacity .5s ease;
+    }
+    @media (hover: hover) and (pointer: fine) { &:hover { @include squished; } }
+    &.is-active { @include squished; }            // táctil (js/pricing.js)
+    &:has(:focus-visible) { @include squished; }  // teclado; regla aparte por si el navegador no admite :has()
+}
+
+// Tres superficies de la misma familia, cada una con su profundidad y sus formas.
+.price-starter {
+    --h1: translateY(-22px) scaleY(.5); --h2: translateY(-20px) scaleY(2.1);
+}
+.price-business {
+    background: linear-gradient(165deg, var(--pr-petrol) 0%, #111f25 52%, var(--pr-carbon) 100%);
+    border-color: rgba(tokens.$pr-accent, .3);
+    --shape-a: rgba(247, 247, 245, .045); --shape-b: #{rgba(tokens.$pr-accent, .11)};
+    --h1: translate(22px, -14px) scale(.78, 1.12); --h2: translateY(-26px) scale(.8, 2); --h3: translate(-22px, 44px) scale(1.5, .8);
+    @media (min-width: 1041px) {   // apenas más alta que las vecinas: destaca sin gritar
+        margin-block: -14px;
+        .price-body { padding-block: calc(clamp(24px, 2.4vw, 34px) + 14px); }
+    }
+}
+.price-premium {
+    background: linear-gradient(190deg, #0d1114 0%, var(--pr-carbon) 100%);
+    --shape-a: rgba(197, 200, 200, .05); --shape-b: rgba(197, 200, 200, .035);
+    --h1: rotate(14deg) scale(1.2, .72); --h2: translateY(-34px) scale(.74, 2.3); --h3: translate(16px, 20px) rotate(-8deg) scale(1.3, 1.5);
+}
+
+/* 4. Fondo SVG que se deforma */
+.price-bg {
+    position: absolute; top: 0; left: 0; z-index: 0; width: 100%; height: auto; aspect-ratio: 320 / 480; pointer-events: none;
+    transform-origin: 50% 40%; transition: transform $squish $back;
+}
+.sh {
+    transform-box: fill-box; transform-origin: center; fill: var(--shape-a);
+    transition: transform $squish $back .12s;
+}
+.sh-2 { fill: var(--shape-b); }
+.price-business .sh-3 { fill: none; stroke: var(--shape-c); stroke-width: 1.2; }
+.price-premium .sh-3 { fill: none; stroke: var(--shape-c); stroke-width: 1.1; }
+.price-premium .sh-1 { fill: var(--shape-a); }
+
+/* 5. Contenido */
+.price-body { position: relative; z-index: 2; display: flex; flex-direction: column; width: 100%; padding: clamp(24px, 2.4vw, 34px); }
+.price-tier { display: flex; align-items: center; gap: 10px; margin-bottom: 26px; min-height: 24px; }
+// Medidor de nivel: 1, 2 o 3 barras. Comunica la escalera Starter → Business → Premium.
+.tier-meter { display: inline-flex; align-items: flex-end; gap: 3px; height: 14px; }
+.tier-meter i {
+    display: block; width: 4px; border-radius: 1px; background: rgba(197, 200, 200, .28); transition: background .6s ease;
+    &:nth-child(1) { height: 6px; } &:nth-child(2) { height: 10px; } &:nth-child(3) { height: 14px; }
+    &.on { background: rgba(197, 200, 200, .8); }
+}
+.tier-label { font-size: 12px; letter-spacing: .06em; color: var(--pr-silver); opacity: .85; }
+.price-flag {
+    margin-left: auto; padding: 5px 11px; border: 1px solid rgba(tokens.$pr-accent, .6); border-radius: 999px;
+    font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: color.scale(tokens.$pr-accent, $lightness: 28%); background: rgba(tokens.$pr-accent, .1);
+}
+.price-body h3 { margin: 0 0 10px; font-size: clamp(22px, 2vw, 26px); font-weight: 600; letter-spacing: -.035em; line-height: 1.1; color: var(--pr-ivory); }
+.price-desc { margin: 0; min-height: 4.8em; font-size: 14px; line-height: 1.6; color: var(--pr-silver); opacity: .78; max-width: 32ch; }
+
+// "Ver detalles del paquete": menú que se desliza. Sin JavaScript la lista queda abierta y el botón oculto.
+// Con JS (js/pricing.js añade .has-details) cada tarjeta arranca cerrada y anima su altura con grid-template-rows.
+.price-toggle {
+    display: none; align-items: center; justify-content: space-between; gap: 14px; width: 100%; margin: 0; padding: 17px 0;
+    border: 0; border-block: 1px solid rgba(197, 200, 200, .14); border-radius: 0; background: transparent; cursor: pointer;
+    font: 600 14px/1.3 Arial, Helvetica, sans-serif; text-align: left; color: var(--pr-ivory);
+    transition: color .35s ease, border-color .35s ease;
+    @media (hover: hover) { &:hover { color: var(--pr-amber); border-color: rgba(tokens.$pr-accent, .4); } }
+    &:active { color: var(--pr-amber); }
+    &:focus-visible { outline: 2px solid var(--pr-ivory); outline-offset: 3px; }
+    &[aria-expanded="true"] .toggle-show, &[aria-expanded="false"] .toggle-hide { display: none; }
+}
+.has-details .price-toggle { display: flex; }
+// Icono + que gira a − al abrir.
+.toggle-icon {
+    position: relative; flex: none; width: 14px; height: 14px;
+    &::before, &::after {
+        content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 1.5px; margin-top: -.75px; border-radius: 1px;
+        background: currentColor; transition: transform .55s $soft;
+    }
+    &::after { transform: rotate(90deg); }
+}
+.price-toggle[aria-expanded="true"] .toggle-icon::after { transform: rotate(0deg); }
+
+.price-details { display: grid; grid-template-rows: 1fr; }
+.price-details-inner { min-height: 0; overflow: hidden; }
+.has-details .price-card:not(.is-open) .price-details { grid-template-rows: 0fr; }
+.has-details .price-card:not(.is-open) .price-details-inner { visibility: hidden; opacity: 0; }   // fuera del orden de lectura al cerrar
+// Las transiciones se activan un instante después de cargar (.details-ready) para que no se vea cerrarse al abrir la página.
+.details-ready {
+    .price-details { transition: grid-template-rows .65s $soft; }
+    .price-details-inner { transition: opacity .45s ease .12s, visibility 0s; }
+    .price-card:not(.is-open) .price-details-inner { transition: opacity .25s ease, visibility 0s .65s; }
+}
+
+// El precio es el protagonista: grande, claro y con una escala que "se asienta" al activar la tarjeta.
+.price-block { margin: 26px 0 26px; }
+.price-amount {
+    display: flex; align-items: flex-start; margin: 0; line-height: 1; color: var(--pr-ivory);
+    transform-origin: left bottom; transform: scale(.93); transition: transform $squish $back;
+}
+.price-cur { margin: .2em .14em 0 0; font-size: clamp(20px, 2vw, 28px); color: var(--pr-amber); letter-spacing: 0; }
+.price-num { font-size: clamp(44px, 4.7vw, 66px); font-weight: 400; letter-spacing: -.06em; line-height: .95; white-space: nowrap; }
+.price-unit { display: block; margin-top: 10px; font-size: 12px; letter-spacing: .04em; color: var(--pr-silver); opacity: .7; }
+// "Ideal para…": una línea que ayuda a elegir. Altura mínima de 3 líneas para alinear las listas en 3 columnas.
+.price-for {
+    margin: 0 0 26px; min-height: 4.5em; font-size: 13px; line-height: 1.5; color: var(--pr-silver); opacity: .82; max-width: 34ch;
+    b { color: var(--pr-ivory); font-weight: 600; }
+}
+
+.price-list {
+    display: grid; gap: 11px; margin: 0; padding: 22px 0 6px; list-style: none;
+    li { position: relative; padding-left: 20px; font-size: 14px; line-height: 1.5; color: var(--pr-silver); }
+    li::before { content: ""; position: absolute; left: 0; top: .78em; width: 9px; height: 1px; background: var(--pr-amber); }
+    // "Todo lo incluido en…": la fila que hereda el paquete anterior, con un "+".
+    li.is-inherit { color: var(--pr-ivory); font-weight: 600; }
+    li.is-inherit::before {
+        top: .5em; width: 9px; height: 9px; background:
+            linear-gradient(var(--pr-amber), var(--pr-amber)) center / 100% 1px no-repeat,
+            linear-gradient(var(--pr-amber), var(--pr-amber)) center / 1px 100% no-repeat;
+    }
+}
+
+/* 6. Botones: relleno que sube desde abajo y flecha que se desplaza */
+.price-cta, .pricing-ghost {
+    position: relative; overflow: hidden; isolation: isolate; display: inline-flex; align-items: center; justify-content: space-between; gap: 14px;
+    min-height: 52px; padding: 0 22px; border: 1px solid rgba(247, 247, 245, .3); border-radius: 999px;
+    font-size: 14px; font-weight: 600; color: var(--pr-ivory); background: transparent;
+    transition: color .45s $soft, border-color .45s $soft;
+    &::before {
+        content: ""; position: absolute; inset: 0; z-index: -1; background: var(--pr-ivory);
+        transform: translateY(101%); transition: transform .55s $soft;
+    }
+    .cta-arrow { display: inline-flex; transition: transform .45s $soft; }
+    .icon-arrow { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    &:focus-visible, &:active { color: var(--pr-black); border-color: var(--pr-ivory); }
+    &:focus-visible::before, &:active::before { transform: translateY(0); }
+    &:focus-visible .cta-arrow { transform: translate(3px, -3px); }
+    // :hover solo con cursor real: en táctil se quedaría "pegado" después de tocar.
+    @media (hover: hover) {
+        &:hover { color: var(--pr-black); border-color: var(--pr-ivory); }
+        &:hover::before { transform: translateY(0); }
+        &:hover .cta-arrow { transform: translate(3px, -3px); }
+    }
+}
+.price-cta { margin-top: 26px; width: 100%; }
+// Business: botón principal (relleno marfil); al pasar el cursor se tiñe de ámbar.
+.price-business .price-cta {
+    background: var(--pr-ivory); color: var(--pr-black); border-color: var(--pr-ivory);
+    &::before { background: var(--pr-amber); }
+    &:focus-visible, &:active { border-color: var(--pr-amber); }
+    @media (hover: hover) { &:hover { border-color: var(--pr-amber); } }
+}
+
+/* 7. Cómo trabajamos: tres pasos sobrios, solo con lo que ya promete cada paquete */
+.pricing-process { display: grid; gap: 22px; margin-bottom: clamp(12px, 2vw, 24px); }
+.process-title { margin: 0; font-size: 12px; letter-spacing: .06em; color: var(--pr-silver); opacity: .85; }
+.pricing-steps {
+    display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(20px, 3vw, 40px); margin: 0; padding: 0; list-style: none;
+    li { padding-top: 20px; border-top: 1px solid rgba(197, 200, 200, .14); }
+    h3 { margin: 10px 0 8px; font-size: 17px; font-weight: 600; letter-spacing: -.02em; color: var(--pr-ivory); }
+    p { margin: 0; max-width: 34ch; font-size: 14px; line-height: 1.6; color: var(--pr-silver); opacity: .78; }
+}
+.step-num { font-size: 12px; letter-spacing: .12em; color: var(--pr-amber); }
+
+/* 8. Nota final y propuesta personalizada */
+.pricing-foot { display: grid; gap: 26px; margin-top: clamp(40px, 5vw, 72px); }
+.pricing-custom {
+    display: flex; align-items: center; justify-content: space-between; gap: 22px 48px; padding-top: 32px;
+    border-top: 1px solid rgba(48, 54, 56, .95);
+    p { max-width: 54ch; margin: 0; font-size: 15px; line-height: 1.65; color: var(--pr-silver); }
+}
+.pricing-ghost { flex: none; border-color: rgba(tokens.$pr-accent, .6); padding-inline: 26px; }
+.pricing-fineprint { max-width: 74ch; margin: 0; font-size: 12.5px; line-height: 1.7; color: rgba(197, 200, 200, .66); }
+
+/* 9. Responsive */
+@media (max-width: 1040px) {
+    .pricing-grid { grid-template-columns: minmax(0, 560px); justify-content: center; }
+    .price-desc, .price-for { min-height: 0; max-width: 40ch; }
+}
+@media (max-width: 700px) {
+    .pricing-steps { grid-template-columns: 1fr; gap: 24px; }
+    .pricing-custom { flex-direction: column; align-items: stretch; }
+    .pricing-ghost { justify-content: space-between; }
+    .price-num { font-size: clamp(52px, 17vw, 68px); }
+    .price-cur { font-size: 26px; }
+}
+
+/* 10. Movimiento reducido: sin escalas ni deformaciones, solo el cambio de borde y color. Como en el resto del
+      sitio, no aplica si <html data-motion="on"> (lo fija script.js). */
+@media (prefers-reduced-motion: reduce) {
+    html:not([data-motion="on"]) {
+        .price-card, .price-bg, .sh, .price-amount, .price-cta::before, .pricing-ghost::before, .cta-arrow { transition-duration: .01s; transition-delay: 0s; }
+        .price-card { transform: none !important; }
+        .price-bg, .sh { transform: none !important; }
+        .price-amount { transform: none; }
+        .details-ready .price-details, .details-ready .price-details-inner, .details-ready .price-card:not(.is-open) .price-details-inner,
+        .toggle-icon::before, .toggle-icon::after { transition-duration: .01s !important; transition-delay: 0s !important; }
+    }
+}

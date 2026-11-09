@@ -1,0 +1,35 @@
+// Animaciones y pausa de movimiento heredadas (.reveal, arrive, bob, .motion-paused).
+/* Animación de entrada al dibujar tarjetas y galería. */
+.reveal {
+    animation: arrive 0.7s ease both;
+}
+/* Entrada suave: desplazamiento corto y aumento de opacidad. */
+@keyframes arrive {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+/* Flotación lenta de la mascota. */
+@keyframes bob {
+    0%,
+    100% {
+        transform: translateY(0) rotate(-2deg);
+    }
+    50% {
+        transform: translateY(-18px) rotate(3deg);
+    }
+}
+/* Pausa manual: desactiva animaciones y transiciones en toda la página. */
+.motion-paused * {
+    animation: none !important;
+    scroll-behavior: auto !important;
+    transition: none !important;
+}
+.motion-paused .hero-light {
+    display: none;
+}

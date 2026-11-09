@@ -1,0 +1,17 @@
+// Encabezado compartido por proyectos y galería.
+/* 3. PROYECTOS · Portadas editoriales y ficha independiente. */
+
+/* Encabezado compartido por proyectos y galería. */
+.section-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 30px;
+    margin-bottom: 40px;
+}
+.section-head > p {
+    font-size: 14px;
+    max-width: 320px;
+    margin-bottom: 5px;
+    color: var(--muted);
+}

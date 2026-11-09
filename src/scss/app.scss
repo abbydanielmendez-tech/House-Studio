@@ -1,0 +1,73 @@
+// PUNTO DE ENTRADA SASS. Gulp compila este archivo; no lo carga el navegador.
+// ¡EL ORDEN DE LOS @use ES LA CASCADA CSS! No lo reordenes sin revisar el resultado:
+// las capas posteriores (layers/) sobrescriben a las anteriores.
+// Editá los parciales, nunca dist/css/app.min.css.
+
+// 1. BASE · variables, reinicio, contenedor, tipografía
+@use "base/variables";
+@use "base/reset";
+@use "layout/container";
+@use "base/typography";
+
+// 2. CABECERA y hero antiguo (el hero vigente es scenes/_hero)
+@use "layout/header";
+@use "scenes/hero-legacy";
+@use "components/circle-link";
+@use "scenes/hero-legacy-scene";
+@use "components/service-strip";
+
+// 3. PROYECTOS
+@use "layout/section-head";
+@use "components/filters";
+@use "components/projects";
+@use "components/tags";
+@use "components/project-actions";
+
+// 4. BANNERS, GALERÍA, SOBRE MÍ, CONTACTO, PIE
+@use "components/banners";
+@use "components/stack-deck";
+@use "components/vertical-tabs";
+@use "components/flip-links";
+@use "components/about";
+@use "components/contact";
+@use "layout/footer";
+
+// 5. MODAL y movimiento heredado
+@use "components/modal";
+@use "base/motion-legacy";
+
+// 6. CAPA RESPONSIVE (tablet y móvil de todo lo anterior)
+@use "layers/responsive";
+
+// 7. CASOS DE BRANDING y profundidad
+@use "components/branding";
+@use "components/depth";
+
+// 8. MODO OSCURO, tema, franjas y apariciones
+@use "layers/dark-mode";
+@use "components/theme-toggle";
+@use "components/typewriter";
+@use "components/marquee";
+@use "components/scroll-reveal";
+@use "layers/experience-media";
+
+// 9. ESCENAS: intro CRT y jardín
+@use "scenes/intro";
+@use "scenes/intro-3d";
+@use "scenes/hero";
+
+// 10. CAPA DE ATMÓSFERA (acabado visual vigente: paleta, tarjetas, franjas)
+@use "layers/atmosphere";
+
+// 12. PROFUNDIDAD 3D y HOVERS (se cargan al final para sumarse a todo lo anterior)
+@use "components/hover-fx";
+@use "components/site-header";
+
+// 12b. CARRUSEL de proyectos (reemplaza la grilla; va después de las capas que aún mencionan .project:first-child)
+@use "components/carousel";
+
+// 12c. PRECIOS Y PAQUETES (#precios, después de proyectos; banda oscura con su propia paleta --pr-*)
+@use "components/pricing";
+
+// 13. PULIDO responsive y táctil (último, para ganar a todo lo anterior)
+@use "layers/polish";

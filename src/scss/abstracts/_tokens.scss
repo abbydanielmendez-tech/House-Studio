@@ -1,0 +1,22 @@
+// PALETAS. Sass genera variables CSS para permitir el cambio de tema sin recargar.
+// blue es el nombre heredado del acento ámbar; no representa el color de las franjas.
+$night: (cream:#0c1014, paper:#141a20, ink:#FDFDFF, muted:#b4b1ab,
+  line:#30353a, "blue":#e0b37b, "orange":#e0b37b, surface:#181e24,
+  deep:#070c10, glow:#ab75431a, shadow:0 18px 48px -20px #000b, radius:14px);
+
+
+$day: (cream:#eee7da, paper:#e5dccd, ink:#20282b, muted:#5a5c58,
+  line:#c8bead, "blue":#79512b, "orange":#79512b, surface:#f5efe5,
+  deep:#d9d0c0, glow:#ab754314, shadow:0 18px 48px -26px #3b30294d, radius:14px);
+
+// PRECIOS Y PAQUETES: banda cinematográfica fija (igual en modo oscuro y claro), con su propia paleta.
+// Se emite como --pr-* dentro de .pricing; no pisa las variables globales del tema.
+// >>> COLOR DE ACENTO (letras, líneas, bordes y brillos de la sección): cambia SOLO este valor. <<<
+$pr-accent: #e8812e;   // naranja. El ámbar original era #a77b50
+$pricing: (pr-black:#080b0d, pr-carbon:#15191c, pr-petrol:#14252d, pr-graphite:#303638,
+  pr-silver:#c5c8c8, pr-ivory:#f7f7f5, pr-amber:$pr-accent);
+
+// Reutilizable: transforma cada par nombre/valor en una propiedad --nombre.
+@mixin emit($palette) {
+  @each $name, $value in $palette { --#{$name}: #{$value}; }
+}

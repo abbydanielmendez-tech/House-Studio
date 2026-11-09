@@ -1,0 +1,37 @@
+/* 09. PROFUNDIDAD Y MICROINTERACCIONES
+   Sombras cálidas sobre el fondo neutro; las imágenes originales no se alteran. */
+.icon-arrow {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    vertical-align: -0.14em;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    pointer-events: none;
+}
+.circle-link .icon-arrow {
+    width: 34px;
+    height: 34px;
+}
+.project-cover {
+    box-shadow:
+        0 3px 5px #3024180a,
+        0 16px 30px -14px #30241842;
+    transition:
+        transform 0.4s ease,
+        box-shadow 0.4s ease;
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    html:not(.motion-paused) .project-cover:hover {
+        /* Elevación + inclinación 3D: --rx/--ry/--sx/--sy los escribe js/interactions.js */
+        transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) translate3d(0, -7px, 24px);
+        box-shadow:
+            0 6px 10px #3024180a,
+            calc(var(--sx, 0) * -16px) calc(26px + var(--sy, 0) * -10px) 40px -14px #30241866;
+    }
+}
+
+

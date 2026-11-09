@@ -1,0 +1,174 @@
+// PILA DE TARJETAS (#gallery · "House Studio, por dentro")
+// Las tarjetas entran desde abajo y se apilan como pestañas de carpeta mientras se baja por la página.
+// El movimiento lo calcula js/stack-deck.js (lee las variables de abajo); este archivo define cómo se ve y las medidas.
+//
+// ESTRUCTURA (la dibuja renderGallery() en js/script.js):
+//   #gallery.stack-deck ......... contenedor; aquí viven las variables editables
+//     .stack-track .............. "pista" muy alta: su altura es el scroll que dura la animación
+//       .stack-sticky ........... escenario pegado a la pantalla (position: sticky) mientras la pista pasa
+//         .stack-stage .......... zona de las tarjetas (altura fija); las tarjetas se superponen aquí
+//           .stack-card ......... una tarjeta (.tone-blue | .tone-orange | .tone-ink | .tone-cream)
+//             .stack-tab ........ la pestaña con "01 · Branding"
+//             .stack-body ....... cuerpo: texto a la izquierda, imagen a la derecha
+//         .stack-count .......... contador "01 / 05"
+
+$soft: cubic-bezier(.2, .7, .2, 1);
+
+/* 1. VARIABLES EDITABLES · cambia estos números para ajustar la pila */
+.stack-deck {
+    --stack-lift: 44px;      // cuánto sube cada tarjeta anterior: es lo que deja asomar su pestaña
+    --stack-shrink: .035;    // cuánto se encoge cada tarjeta por nivel (0.035 = 3,5 %)
+    --stack-depth: 3;        // cuántas pestañas se ven apiladas (las más antiguas quedan escondidas)
+    --stack-step: 80vh;      // cuánto hay que bajar para pasar a la siguiente tarjeta (más = más lento)
+    --stack-top: 4.5rem;     // espacio libre arriba para que la cabecera no tape la pila
+    --tab-h: 3rem;           // alto de la pestaña
+    --vh: 100vh;             // "pantalla completa"; abajo se cambia a svh si el navegador lo soporta
+    // Alto del cuerpo de la tarjeta: lo que quepa en pantalla, entre 22 y 32 rem.
+    --body-min: 22rem;       // alto mínimo del cuerpo de la tarjeta (en pantallas bajas se reduce abajo)
+    --body-h: clamp(var(--body-min), calc(var(--vh) - var(--stack-top) - (var(--stack-lift) * var(--stack-depth)) - 3rem - var(--tab-h) - 2.5rem), 32rem);
+    margin-top: clamp(26px, 3vw, 44px);
+    pointer-events: none;   // la zona vacía (arriba de la 1.ª tarjeta, sobre los filtros) no debe bloquear clics; solo las tarjetas los reciben
+}
+// svh = alto visible real en móviles (la barra del navegador no lo estira); si no existe, queda vh.
+@supports (height: 100svh) { .stack-deck { --vh: 100svh; } }
+
+/* 2. LA PISTA Y EL ESCENARIO */
+.stack-track {
+    position: relative;
+    // Acerca la primera tarjeta a los filtros: el espacio de arriba solo hace falta cuando ya hay pestañas apiladas.
+    margin-top: calc(var(--stack-lift) * var(--stack-depth) * -.7);
+    pointer-events: none;                  // la parte vacía no debe bloquear los filtros que quedan debajo de ella
+    // Alto = una pantalla (lo que mide el escenario pegado) + un tramo de scroll por cada transición entre tarjetas.
+    height: calc(var(--vh) - var(--stack-top) + (var(--n, 1) - 1) * var(--stack-step));
+}
+.stack-sticky {
+    position: sticky; top: var(--stack-top);
+    height: calc(var(--vh) - var(--stack-top));
+    display: grid; align-content: center; justify-items: center;
+    // Reserva arriba el espacio donde asoman las pestañas apiladas; abajo, el del contador.
+    padding: calc(var(--stack-lift) * var(--stack-depth) + .5rem) 0 2.5rem;
+    box-sizing: border-box;
+}
+.stack-stage {
+    position: relative; width: min(100%, 62.5rem);
+    height: calc(var(--tab-h) + var(--body-h));
+}
+.stack-card, .stack-count { pointer-events: auto; }
+.stack-count {
+    position: absolute; bottom: .9rem; left: 50%; margin: 0; transform: translateX(-50%);
+    font-size: 12px; letter-spacing: .16em; color: var(--muted);
+    [data-now] { color: var(--ink); }
+}
+// will-change solo mientras la pila está en pantalla (promover las cartas siempre gasta memoria de GPU).
+.stack-deck.is-live .stack-card { will-change: transform; }
+
+/* 3. LA TARJETA · se coloca encima de las demás; el JS le aplica transform (posición y escala) */
+.stack-card {
+    // Colores por defecto = tono "crema". Cada .tone-* de abajo los reemplaza.
+    --card: #fff3dc; --ink: #191919; --ink-soft: #191919b3; --frame: #1919190f; --edge: #19191914;
+    position: absolute; inset: 0 0 auto 0; z-index: calc(var(--i, 0) + 1);
+    height: 100%; box-sizing: border-box; padding-top: var(--tab-h);
+    transform-origin: center top;          // se encoge hacia arriba: así se ve la pestaña de cada tarjeta anterior
+    backface-visibility: hidden;
+    color: var(--ink);
+}
+// Tonos: los colores de la identidad de House Studio. Se eligen con tone: '...' en cada pieza de data.js.
+// Cada uno trae su color de texto con contraste suficiente (≥ 4,5:1) sobre su fondo.
+.tone-blue   { --card: #2463eb; --ink: #fff3dc; --ink-soft: #fff3dc;   --frame: #fff3dc1f; --edge: #ffffff1f; }
+.tone-orange { --card: #ff8200; --ink: #191919; --ink-soft: #191919d1; --frame: #1919191a; --edge: #19191926; }
+.tone-ink    { --card: #191919; --ink: #fff3dc; --ink-soft: #fff3dcc7; --frame: #fff3dc12; --edge: #fff3dc2e; }
+.tone-cream  { --card: #fff3dc; --ink: #191919; --ink-soft: #191919b8; --frame: #1919190f; --edge: #19191914; }
+
+.stack-tab {
+    position: absolute; top: 0; left: 0; z-index: 1;
+    // 1 px más alto que la pestaña real: tapa el filo del cuerpo justo debajo y la pestaña se funde con la tarjeta.
+    display: flex; align-items: center; height: calc(var(--tab-h) + 1px); width: clamp(10.5rem, 34%, 15rem); padding: 0 1.4rem 1px;
+    box-sizing: border-box; border-radius: 16px 16px 0 0; background: var(--card);
+    box-shadow: -1px 0 0 var(--edge), 1px 0 0 var(--edge), 0 -1px 0 var(--edge), inset 0 1px 0 #ffffff2e;
+    font-size: 14px; font-weight: 600; letter-spacing: -.01em;
+    span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+}
+.stack-body {
+    position: relative; height: 100%; box-sizing: border-box; overflow: hidden;
+    display: grid; grid-template-columns: minmax(0, .92fr) minmax(0, 1.08fr); gap: clamp(20px, 3.4vw, 52px); align-items: center;
+    padding: clamp(18px, 2.4vw, 34px);
+    border-radius: 0 18px 18px 18px; background: var(--card);
+    // Sombras: el halo oscuro de arriba separa esta tarjeta de la anterior; el de abajo la despega de la página.
+    box-shadow: 0 0 0 1px var(--edge), 0 -14px 30px -18px #000000a6, 0 34px 60px -30px #000000cc, inset 0 -2px 4px -2px #00000040;
+}
+
+// Al quedar tapada por la siguiente tarjeta, el contenido se desvanece (--bury lo escribe js/stack-deck.js).
+.stack-body > * { opacity: calc(1 - var(--bury, 0)); }
+
+/* 4. CONTENIDO: texto + imagen */
+.stack-copy {
+    display: flex; flex-direction: column; align-items: flex-start; gap: 14px; min-width: 0;
+    h4 { margin: 0; font-size: clamp(1.45rem, 2.5vw, 2.3rem); font-weight: 600; letter-spacing: -.035em; line-height: 1.08; color: var(--ink); }
+    p { margin: 0; max-width: 38ch; font-size: clamp(.95rem, 1.2vw, 1.08rem); line-height: 1.6; color: var(--ink-soft); }
+}
+.stack-cta {
+    display: inline-flex; align-items: center; gap: 10px; margin-top: 6px; padding: 12px 20px; min-height: 44px;
+    border: 1.5px solid currentColor; border-radius: 999px; background: transparent; color: var(--ink);
+    font: 600 14px/1 Arial, Helvetica, sans-serif; cursor: pointer;
+    transition: background-color .35s $soft, color .35s $soft, border-color .35s $soft;
+    .icon-arrow { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; transition: transform .4s $soft; }
+    &:focus-visible, &:active { background: var(--ink); color: var(--card); border-color: var(--ink); }
+    @media (hover: hover) {
+        &:hover { background: var(--ink); color: var(--card); border-color: var(--ink); }
+        &:hover .icon-arrow { transform: translate(2px, -2px); }
+    }
+}
+// La imagen se muestra COMPLETA (contain): son logos y láminas que no deben recortarse. Va centrada sobre un "paspartú".
+.stack-media {
+    position: relative; display: block; width: 100%; height: 100%; min-height: 0; padding: 0; overflow: hidden;
+    border: 0; border-radius: 14px; background: var(--frame); cursor: zoom-in;
+    img {
+        position: absolute; top: 50%; left: 50%; width: auto; height: auto;
+        max-width: calc(100% - 28px); max-height: calc(100% - 28px); border-radius: 8px;
+        transform: translate(-50%, -50%); box-shadow: 0 16px 34px -14px #00000073;
+        transition: transform .6s $soft;
+    }
+    &:focus-visible, .stack-cta:focus-visible { outline: 3px solid var(--ink); outline-offset: -3px; }
+    @media (hover: hover) { &:hover img { transform: translate(-50%, -50%) scale(1.04); } }
+}
+
+/* 5. SIN PILA: lista normal (movimiento reducido, pantallas muy bajas, o una sola tarjeta). Las clases las pone el JS. */
+.stack-deck.is-static {
+    .stack-track { height: auto; margin-top: 0; }
+    .stack-sticky { position: static; height: auto; display: block; padding: 0; }
+    .stack-stage { height: auto; display: grid; gap: 1.5rem; width: 100%; }
+    .stack-card { position: relative; inset: auto; height: auto; transform: none !important; }
+    .stack-body { height: auto; min-height: 22rem; }
+    .stack-media { min-height: 18rem; }
+    .stack-count { display: none; }
+}
+
+/* 6. RESPONSIVE */
+// Pantallas poco altas (laptops pequeñas, ventana con las herramientas de desarrollador abiertas): pila más compacta.
+@media (max-height: 700px) {
+    .stack-deck { --stack-lift: 30px; --stack-depth: 2; --stack-top: 3.75rem; --tab-h: 2.6rem; --body-min: 16rem; }
+}
+@media (max-width: 820px) {
+    .stack-deck {
+        --stack-lift: 26px; --stack-depth: 2; --stack-step: 70vh; --tab-h: 2.75rem; --stack-top: 4.25rem;
+    }
+    .stack-tab { width: clamp(9rem, 52%, 12rem); padding: 0 1.1rem; font-size: 13px; }
+    // En móvil el texto va arriba y la imagen debajo (ocupa el alto que sobre).
+    .stack-body { grid-template-columns: 1fr; grid-template-rows: auto minmax(0, 1fr); gap: 14px; align-items: stretch; padding: 18px; }
+    .stack-copy { gap: 10px; }
+    .stack-copy p {
+        display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;   // protege el alto
+        font-size: .92rem; line-height: 1.5;
+    }
+    .stack-cta { margin-top: 2px; padding: 10px 16px; }
+    .stack-deck.is-static .stack-media { min-height: 14rem; }
+}
+
+/* 7. MOVIMIENTO REDUCIDO: sin zoom de imagen ni transiciones. Como en el resto del sitio, no aplica si
+      <html data-motion="on"> (lo fija script.js). La lista normal en lugar de la pila la decide el JS. */
+@media (prefers-reduced-motion: reduce) {
+    html:not([data-motion="on"]) {
+        .stack-media img, .stack-cta, .stack-cta .icon-arrow { transition-duration: .01s; }
+        .stack-media:hover img { transform: translate(-50%, -50%); }
+    }
+}

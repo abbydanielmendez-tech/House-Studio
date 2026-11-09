@@ -1,0 +1,20 @@
+// Botones de filtro.
+/* FILTROS: botones generados por script.js; aria-pressed indica la selección. */
+.filters {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 35px;
+    flex-wrap: wrap;
+}
+.filters button {
+    border: 1px solid var(--line);
+    background: transparent;
+    padding: 10px 18px;
+    border-radius: 30px;
+    font-size: 12px;
+}
+.filters button[aria-pressed="true"] {
+    background: var(--ink);
+    color: var(--cream);
+    border-color: var(--ink);
+}

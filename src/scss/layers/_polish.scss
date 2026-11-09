@@ -1,0 +1,24 @@
+// PULIDO RESPONSIVE Y TÁCTIL · se carga al final.
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+// "clip" (a diferencia de "hidden") no crea contenedor de scroll: no rompe el sticky del vistazo.
+body { overflow-x: clip; }
+
+// Pantallas táctiles: objetivos de toque de al menos 44 px.
+@media (pointer: coarse) {
+    .filters button, .brand-jump a, .nav-contact { min-height: 44px; display: inline-flex; align-items: center; }
+    .text-link, .story-button, .project-actions > a { padding-block: 14px; }
+    .theme-toggle { min-height: 48px; }
+}
+// Teléfonos muy angostos (≤ 380 px).
+@media (max-width: 380px) {
+    .nav-contact { padding: 8px 10px; }
+    .filters button { padding: 9px 14px; }
+}
+// Teléfonos en horizontal: el hero no se estira más que la pantalla visible.
+@media (max-height: 520px) and (orientation: landscape) {
+    .hero.hero-poster { min-height: 560px; height: 100svh; }
+}
+
+// Heredado: apila los hijos de estas secciones por encima de su fondo (antes vivía en _mascot).
+#proyectos, #identidad { position: relative; isolation: isolate; }
+#proyectos > *, #identidad > * { position: relative; z-index: 1; }
